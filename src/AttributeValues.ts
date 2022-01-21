@@ -1,6 +1,6 @@
 import { Options } from "./Options";
 
-let index = 0;
+
 export default class AttributeValues{
     
     readonly listId:string;
@@ -17,7 +17,7 @@ export default class AttributeValues{
     readonly inputClassName:string;
     readonly inputShowClassName:string;
 
-    constructor(readonly options:Options)
+    constructor(readonly options:Options, index:number)
     {
         let suffix= "";
         if(index > 0)
@@ -42,7 +42,6 @@ export default class AttributeValues{
         this.inputShowClassName = `${css_prefix}_input_show`;
 
 
-        index+=1;
     }
 
     getSuggestionId(index:number){

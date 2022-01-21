@@ -2,9 +2,9 @@
   "name": "getaddress-autocomplete",
   "version": "1.0.0",
   "description": "",
-  "main": "./dist/getaddress-autocomplete-1.0.0.mjs",
+  "main": "./dist/getaddress-autocomplete.mjs",
   "type": "module",
-  "types": "./dist/getaddress-autocomplete-1.0.0.d.ts",
+  "types": "./dist/getaddress-autocomplete.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "cleanDist": "rimraf dist/*",

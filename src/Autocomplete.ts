@@ -7,8 +7,6 @@ import { AddressSelectedEvent } from "./Events";
 
 export default class Autocomplete
 {
-    
-    readonly attributeValues:AttributeValues;
 
     private filterTimer: ReturnType<typeof setTimeout>
     private blurTimer: ReturnType<typeof setTimeout>
@@ -17,10 +15,8 @@ export default class Autocomplete
     private selectedIndex = -1;
 
     constructor(readonly input:HTMLInputElement,readonly client:Client,
-        readonly output_fields:OutputFields, options:IOptions)
+        readonly output_fields:OutputFields, readonly attributeValues:AttributeValues)
     {
-        const allOptions = new Options(options);
-        this.attributeValues = new AttributeValues(allOptions);
         if(!output_fields.formatted_address_0){
             output_fields.formatted_address_0 = this.input.id;
         }
