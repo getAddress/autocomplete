@@ -5,7 +5,16 @@ import { IOutputFields,OutputFields } from "./OutputFields";
 import Style from "./Style";
 import AttributeValues from "./AttributeValues";
 
-let index = 0;
+class InstanceCounter
+{
+    private static index = 0;
+    static Next(){
+        const returnValue =  InstanceCounter.index;
+        InstanceCounter.index+=1;
+        return returnValue;
+    }
+}
+
 
 export function autocomplete(id:string,api_key:string,output_fields?:IOutputFields, options?: IOptions){
 
@@ -17,6 +26,7 @@ export function autocomplete(id:string,api_key:string,output_fields?:IOutputFiel
     const client = new Client(api_key);
     const outputFields = new OutputFields(output_fields);
 
+    const index = InstanceCounter.Next();
     const allOptions = new Options(options);
     const attributeValues = new AttributeValues(allOptions,index);
     
@@ -26,5 +36,5 @@ export function autocomplete(id:string,api_key:string,output_fields?:IOutputFiel
         const style = new Style(attributeValues);
         style.inject();
     }
-    index+=1;
+    
 }
