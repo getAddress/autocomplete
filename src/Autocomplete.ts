@@ -1,6 +1,6 @@
 import AttributeValues from "./AttributeValues";
 import { IOptions,Options } from "./Options";
-import Client, { AutocompleteAddress, Suggestion } from 'getaddress-api';
+import Client, { AutocompleteAddress, AutocompleteOptions, Suggestion } from 'getaddress-api';
 import { OutputFields } from "./OutputFields";
 import { AddressSelectedEvent } from "./Events";
 
@@ -184,20 +184,26 @@ export default class Autocomplete
             const suggestions = this.list.children;
             const suggestion = suggestions[this.selectedIndex] as HTMLElement;
             
-            if(this.attributeValues.options.clear_list_on_select){
-                this.clearList();
+            if(suggestion.innerText === this.attributeValues.options.show_all_for_postcode_text){
+                this.populateList(true);
             }
+            else
+            {
+                if(this.attributeValues.options.clear_list_on_select){
+                    this.clearList();
+                }
 
-            const id = suggestion.dataset.id;
-            const addressResult = await this.client.get(id);
-            if(addressResult.isSuccess){
-                let success = addressResult.toSuccess();
-                
-                this.bind(success.address);
+                const id = suggestion.dataset.id;
+                const addressResult = await this.client.get(id);
+                if(addressResult.isSuccess){
+                    let success = addressResult.toSuccess();
+                    
+                    this.bind(success.address);
 
-                AddressSelectedEvent.dispatch(this.input,success.address);
+                    AddressSelectedEvent.dispatch(this.input,success.address);
+                }
             }
-            //handle failed
+            //todo: handle failed
         }
         
     };
@@ -289,7 +295,6 @@ export default class Autocomplete
                 this.populateList();
             }
         }
-        
     };
 
 
@@ -357,8 +362,12 @@ export default class Autocomplete
         
     }
 
-    populateList = async ()=>{
-            const result = await this.client.autocomplete(this.input.value);
+    populateList = async (show_all:boolean = this.attributeValues.options.show_all_for_postcode)=>{
+            
+        const autocompleteOptions = new AutocompleteOptions();
+            autocompleteOptions.all = show_all;
+
+            const result = await this.client.autocomplete(this.input.value, autocompleteOptions);
             if(result.isSuccess){
                 const success = result.toSuccess();
                 const newItems:Node[] = [];
@@ -369,6 +378,13 @@ export default class Autocomplete
                         newItems.push(li);
                     }
                     
+                    if(!show_all
+                    && this.isPostcode(this.input.value))
+                    {
+                        const li = this.getShowAllListItem(this.list.children.length-1);
+                        newItems.push(li);
+                    }
+
                     this.list.replaceChildren(...newItems);
                     
                     const toFocus = this.list.children[0] as HTMLElement;
@@ -378,6 +394,9 @@ export default class Autocomplete
                     }
 
                     this.input.classList.add(this.attributeValues.inputShowClassName); 
+
+                    
+
                     this.list.hidden = false;
                 }
                 else
@@ -405,5 +424,22 @@ export default class Autocomplete
 
         return li;
     };
+
+    getShowAllListItem = (index:number)=>
+    {
+        const li = document.createElement('LI');
+        li.tabIndex = -1;
+        li.className = this.attributeValues.suggestionClassName;
+        li.id = this.attributeValues.getSuggestionId(index);
+        li.innerText = this.attributeValues.options.show_all_for_postcode_text;
+      
+        return li;
+    };
+
+    private  isPostcode = (text:string)=>{
+        const pattern = '^(GIR ?0AA|[A-PR-UWYZ]([0-9]{1,2}|([A-HK-Y][0-9]([0-9ABEHMNPRV-Y])?)|[0-9][A-HJKPS-UW]) ?[0-9][ABD-HJLNP-UW-Z]{2})$';
+        const patt = new RegExp(pattern, 'gi');
+        return patt.test(text.trim());
+    }
 
 }

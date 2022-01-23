@@ -7,6 +7,8 @@ export class Options
     minimum_characters:number = 2; 
     clear_list_on_select = true;
     select_on_focus = true;
+    show_all_for_postcode = false;
+    show_all_for_postcode_text  = "Show all..";
 
     constructor(options:IOptions = {})
     {
@@ -25,5 +27,8 @@ export interface IOptions{
     minimum_characters?:number;
     clear_list_on_select?:boolean;
     select_on_focus?:boolean;
+    show_all_for_postcode?:boolean;
+    how_all_for_postcode_text?:string;
+    
 }
 
