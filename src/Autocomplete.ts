@@ -92,16 +92,16 @@ export default class Autocomplete
                 this.handleEndKey(event);
                 break;
             case "Home":
-                //this.handleHomeKey(event);
+                this.handleHomeKey(event);
                 break;
             case "Enter":
                 this.handleEnterKey(event);
                 break;
             case "PageUp":
-                //this.handlePageUpKey(event);
+                this.handlePageUpKey(event);
                 break;
             case "PageDown":
-                //this.handlePageDownKey(event);
+                this.handlePageDownKey(event);
                 break;
             case "Escape":
                 this.handleComponentBlur(event, true);
@@ -111,6 +111,26 @@ export default class Autocomplete
                 break; 
         }
     };
+
+    handlePageUpKey = (event: KeyboardEvent) => {
+        if (!this.list.hidden && event.target == this.input) {
+            event.preventDefault();
+            this.setSuggestionFocus(event, 0);
+        }
+    }
+    handlePageDownKey = (event: KeyboardEvent) => {
+        if (!this.list.hidden && event.target == this.input) {
+            event.preventDefault();
+            this.setSuggestionFocus(event, this.list.children.length -1);
+        }
+    }
+
+    handleHomeKey = (event: KeyboardEvent) => {
+        if (!this.list.hidden && event.target !== this.input) {
+            event.preventDefault();
+            this.setSuggestionFocus(event, 0);
+        }
+    }
 
     handleComponentBlur = (event: Event, force: boolean = false) =>{
         
