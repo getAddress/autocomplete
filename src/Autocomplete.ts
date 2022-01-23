@@ -13,6 +13,9 @@ export default class Autocomplete
     private container:HTMLElement;
     private list: HTMLElement;
     private selectedIndex = -1;
+    private showAllClicked:boolean;
+
+    private documentClick: EventListenerObject;
 
     constructor(readonly input:HTMLInputElement,readonly client:Client,
         readonly output_fields:OutputFields, readonly attributeValues:AttributeValues)
@@ -24,6 +27,8 @@ export default class Autocomplete
 
     public build()
     {
+        this.documentClick = this.handleComponentBlur.bind(this);
+
         this.input.classList.add(this.attributeValues.inputClassName);
 
         this.container = document.createElement('DIV');
@@ -37,6 +42,7 @@ export default class Autocomplete
             if(this.attributeValues.options.select_on_focus){
                 this.input.select();
             }
+            this.selectedIndex = -1;
         });
         
         this.container.addEventListener('focusout', (event) => {
@@ -58,9 +64,11 @@ export default class Autocomplete
         });
         // trigger options selection
         this.list.addEventListener('click', (event) => {
-            if (event.target !== this.list) {
+            if (event.target !== this.list) 
+            {
                 const suggestions = Array.from(this.list.children);
-                if (suggestions.length) {
+                if (suggestions.length) 
+                {
                     const suggestionIndex = suggestions.indexOf(event.target as HTMLElement);
                     this.handleSuggestionSelected(event, suggestionIndex);
                 }
@@ -148,10 +156,12 @@ export default class Autocomplete
             ) {
                 return;
             }
-
-            this.clearList();
-
-            this.container.classList.remove(this.attributeValues.containerFocusedClassName);
+            
+            if(!this.showAllClicked){
+                this.clearList();
+                this.container.classList.remove(this.attributeValues.containerFocusedClassName);
+            }
+            this.showAllClicked = false;
             
         }, delay);
     }
@@ -179,13 +189,18 @@ export default class Autocomplete
     handleSuggestionSelected = async (event: Event,  indexNumber:number)=>{
         
         this.setSuggestionFocus(event,indexNumber);
+        this.showAllClicked = false;
+
         if(this.selectedIndex > -1)
         {
             const suggestions = this.list.children;
             const suggestion = suggestions[this.selectedIndex] as HTMLElement;
             
-            if(suggestion.innerText === this.attributeValues.options.show_all_for_postcode_text){
+            if(suggestion.innerText === this.attributeValues.options.show_all_for_postcode_text)
+            {
+                this.showAllClicked = true;
                 this.populateList(true);
+                this.input.focus();
             }
             else
             {
@@ -346,6 +361,7 @@ export default class Autocomplete
         if (toFocus) {
             this.selectedIndex = index;
             toFocus.classList.add(this.attributeValues.suggestionFocusedClassName);
+            toFocus.focus();
             return;
         }
 
@@ -395,9 +411,10 @@ export default class Autocomplete
 
                     this.input.classList.add(this.attributeValues.inputShowClassName); 
 
-                    
-
                     this.list.hidden = false;
+
+                    document.addEventListener('click', this.documentClick);
+                    
                 }
                 else
                 {
@@ -411,6 +428,7 @@ export default class Autocomplete
         this.list.hidden = true;
         this.selectedIndex = -1;
         this.input.classList.remove(this.attributeValues.inputShowClassName); 
+        document.removeEventListener('click', this.documentClick);
     };
 
     getListItem = (index:number,suggestion:Suggestion)=>

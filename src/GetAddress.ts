@@ -15,7 +15,6 @@ class InstanceCounter
     }
 }
 
-
 export function autocomplete(id:string,api_key:string,output_fields?:IOutputFields, options?: IOptions){
 
     const textbox = document.getElementById(id) as HTMLInputElement;
@@ -23,11 +22,12 @@ export function autocomplete(id:string,api_key:string,output_fields?:IOutputFiel
     if(!textbox){
         return;
     }
-    const client = new Client(api_key);
+    const allOptions = new Options(options);
+    const client = new Client(api_key, allOptions.alt_autocomplete_url,allOptions.alt_get_url);
     const outputFields = new OutputFields(output_fields);
 
     const index = InstanceCounter.Next();
-    const allOptions = new Options(options);
+
     const attributeValues = new AttributeValues(allOptions,index);
     
     const autocomplete = new Autocomplete(textbox,client,outputFields,attributeValues);

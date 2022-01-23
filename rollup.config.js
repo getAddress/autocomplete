@@ -8,11 +8,11 @@ export default [
         input: "src/GetAddress.ts",
         output: {
             file:"dist/getaddress-autocomplete.mjs",
-            format:"es"
+            format:"es",
         }
         ,plugins:[nodeResolve(),ts()]
     },
-    {
+    /* {
         input: "dist/getaddress-autocomplete.mjs",
         output: {
             file:"dist/getaddress-autocomplete-" + version + ".js",
@@ -20,8 +20,8 @@ export default [
             name:'getAddress',
             sourcemap:  "inline"
         }
-    }
-    /* {
+    } */
+    {
         input: "src/GetAddress.ts",
         output: {
             file:"dist/getaddress-autocomplete-" + version + ".js",
@@ -30,5 +30,5 @@ export default [
             sourcemap:  "inline"
         }
         ,plugins:[nodeResolve(),ts()]
-    }, */
+    }
 ]

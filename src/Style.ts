@@ -35,6 +35,8 @@ export default class Style{
         border-top: 1px dotted #ccc;
         margin: 0;
         margin-top: -1px;
+        max-height:10.1em;
+        overflow-y:auto;
     }
    
     .${this.attributeValues.listClassName}:focus {
@@ -46,6 +48,7 @@ export default class Style{
     .${this.attributeValues.suggestionFocusedClassName} {
          background: #f3f3f3; 
          cursor: pointer;
+         outline:0;
     }
     `;
     inject = ()=> 

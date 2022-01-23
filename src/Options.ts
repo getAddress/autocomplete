@@ -9,6 +9,8 @@ export class Options
     select_on_focus = true;
     show_all_for_postcode = false;
     show_all_for_postcode_text  = "Show all..";
+    alt_autocomplete_url:string = undefined;
+    alt_get_url:string = undefined;
 
     constructor(options:IOptions = {})
     {
@@ -29,6 +31,7 @@ export interface IOptions{
     select_on_focus?:boolean;
     show_all_for_postcode?:boolean;
     how_all_for_postcode_text?:string;
-    
+    alt_autocomplete_url?:string;
+    alt_get_url?:string;
 }
 
