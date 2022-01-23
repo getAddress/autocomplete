@@ -18,14 +18,12 @@ export default class Style{
     }
 
     .${this.attributeValues.inputClassName} {
-        border: 1px solid #606060;
         outline:0;
     }
-    .${this.attributeValues.inputClassName}:focus {
-        outline:0;
-    }
+    
     .${this.attributeValues.inputShowClassName} {
-        border-bottom: 0;
+        border: 2px solid transparent;
+        border-bottom: none;
     }
 
     .${this.attributeValues.listClassName}
