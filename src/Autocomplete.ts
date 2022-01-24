@@ -1,8 +1,11 @@
 import AttributeValues from "./AttributeValues";
 import Client, { AutocompleteAddress, AutocompleteOptions, Suggestion } from 'getaddress-api';
 import { OutputFields } from "./OutputFields";
-import { AddressSelectedEvent } from "./Events";
+import { AddressSelectedEvent, AddressSelectedFailedEvent, SuggestionsEvent, SuggestionsFailedEvent } from "./Events";
 
+
+//todo: autocomplete filter
+//todo: aria
 
 export default class Autocomplete
 {
@@ -71,12 +74,11 @@ export default class Autocomplete
             }
         }
 
-         // clear any current focus position when hovering into the list
         this.list.addEventListener('mouseenter', (event) => {
             const suggestions = this.list.children;
             this.removeSuggestionFocusedClassName(suggestions);
         });
-        // trigger options selection
+       
         this.list.addEventListener('click', (event) => {
             if (event.target !== this.list) 
             {
@@ -157,15 +159,12 @@ export default class Autocomplete
     handleComponentBlur = (event: Event, force: boolean = false) =>{
         
         clearTimeout(this.blurTimer);
-        // use a timeout to ensure this blur fires after other focus events
-        // and in case the user focuses back in immediately
+
         const delay: number = force ? 0 : 100;
         this.blurTimer = setTimeout(() => {
-            // do nothing if blurring to an element within the list
             const activeElem: Element = document.activeElement;
             if (!force &&
                 activeElem &&
-                // must base this on the wrapper to allow scrolling the list in IE
                 this.container.contains(activeElem)
             ) {
                 return;
@@ -229,10 +228,14 @@ export default class Autocomplete
                     
                     this.bind(success.address);
 
-                    AddressSelectedEvent.dispatch(this.input,success.address);
+                    AddressSelectedEvent.dispatch(this.input,id,success.address);
+                }
+                else{
+                    const failed = addressResult.toFailed();
+                    AddressSelectedFailedEvent.dispatch(this.input,id,failed.status,failed.message);
                 }
             }
-            //todo: handle failed
+            
         }
         
     };
@@ -354,24 +357,20 @@ export default class Autocomplete
        
         this.removeSuggestionFocusedClassName(suggestions);
 
-        // if negative index, or no options available, focus on input
         if (index < 0 || !suggestions.length) {
             this.selectedIndex = -1;
-            // focus on input, only if event was from another element
             if (event && (event as Event).target !== this.input) {
                 this.input.focus();
             }
             return;
         }
 
-        // down arrow on/past last option, focus on last item
         if (index >= suggestions.length) {
             this.selectedIndex = suggestions.length - 1;
             this.setSuggestionFocus(event, this.selectedIndex);
             return;
         }
 
-        // if option found, move focus to it...
         const toFocus = suggestions[index] as HTMLElement;
         if (toFocus) {
             this.selectedIndex = index;
@@ -380,7 +379,6 @@ export default class Autocomplete
             return;
         }
 
-        // reset index just in case none of the above conditions are met
         this.selectedIndex = -1;
 
     }
@@ -398,11 +396,14 @@ export default class Autocomplete
         const autocompleteOptions = new AutocompleteOptions();
             autocompleteOptions.all = show_all;
 
-            const result = await this.client.autocomplete(this.input.value, autocompleteOptions);
+            const query = this.input.value?.trim();
+            const result = await this.client.autocomplete(query, autocompleteOptions);
             if(result.isSuccess){
                 const success = result.toSuccess();
                 const newItems:Node[] = [];
-                if(success.suggestions.length){
+
+                if(success.suggestions.length)
+                {
                     
                     for(let i = 0; i< success.suggestions.length; i++){
                         const li = this.getListItem(i,success.suggestions[i]);
@@ -410,7 +411,7 @@ export default class Autocomplete
                     }
                     
                     if(!show_all
-                    && this.isPostcode(this.input.value))
+                    && this.isPostcode(query))
                     {
                         const li = this.getShowAllListItem(this.list.children.length-1);
                         newItems.push(li);
@@ -435,6 +436,12 @@ export default class Autocomplete
                 {
                     this.clearList(); 
                 }
+                SuggestionsEvent.dispatch(this.list,query, success.suggestions);
+            }
+            else
+            {
+                const failed = result.toFailed();
+                SuggestionsFailedEvent.dispatch(this.list,query,failed.status,failed.message);
             }
     };
 
