@@ -37,6 +37,12 @@ export default class Autocomplete
                 this.input.classList.add(name);
             }
         }
+        this.input.setAttribute('aria-expanded', 'false');
+        this.input.setAttribute('autocomplete', 'off');
+        this.input.setAttribute('aria-autocomplete', 'list');
+        this.input.setAttribute('role', 'combobox');
+        this.input.setAttribute('aria-owns', `${this.attributeValues.listId}`);
+        
 
         this.container = document.createElement('DIV');
         this.container.id = this.attributeValues.containerId;
@@ -73,6 +79,9 @@ export default class Autocomplete
                 this.list.classList.add(name);
             }
         }
+        this.list.setAttribute('role', 'listbox');
+        this.list.setAttribute('aria-hidden', 'true');
+
 
         this.list.addEventListener('mouseenter', (event) => {
             const suggestions = this.list.children;
@@ -404,16 +413,18 @@ export default class Autocomplete
 
                 if(success.suggestions.length)
                 {
-                    
+                    const showAllOption = !show_all && this.isPostcode(query);
+                    const totalLength = showAllOption? success.suggestions.length+1:success.suggestions.length;
+
                     for(let i = 0; i< success.suggestions.length; i++){
-                        const li = this.getListItem(i,success.suggestions[i]);
+                        
+                        const li = this.getListItem(i,success.suggestions[i],totalLength);
                         newItems.push(li);
                     }
                     
-                    if(!show_all
-                    && this.isPostcode(query))
+                    if(showAllOption)
                     {
-                        const li = this.getShowAllListItem(this.list.children.length-1);
+                        const li = this.getShowAllListItem(this.list.children.length,totalLength);
                         newItems.push(li);
                     }
 
@@ -428,6 +439,8 @@ export default class Autocomplete
                     this.input.classList.add(this.attributeValues.inputShowClassName); 
                         
                     this.list.hidden = false;
+                    this.input.setAttribute('aria-expanded', 'true');
+                    this.list.setAttribute('aria-hidden', 'false');
 
                     document.addEventListener('click', this.documentClick);
                     
@@ -448,12 +461,14 @@ export default class Autocomplete
     clearList = ()=>{
         this.list.replaceChildren(...[]);
         this.list.hidden = true;
+        this.input.setAttribute('aria-expanded', 'false');
+        this.list.setAttribute('aria-hidden', 'true');
         this.selectedIndex = -1;
         this.input.classList.remove(this.attributeValues.inputShowClassName); 
         document.removeEventListener('click', this.documentClick);
     };
 
-    getListItem = (index:number,suggestion:Suggestion)=>
+    getListItem = (index:number,suggestion:Suggestion,length:number)=>
     {
         const li = document.createElement('LI');
         li.tabIndex = -1;
@@ -477,11 +492,14 @@ export default class Autocomplete
         }
 
         li.dataset.id =suggestion.id;
-
+        li.setAttribute('role', 'option');
+        li.setAttribute('aria-posinset', `${index + 1}`);
+        li.setAttribute('aria-setsize', `${length}`);
+        
         return li;
     };
 
-    getShowAllListItem = (index:number)=>
+    getShowAllListItem = (index:number,length:number)=>
     {
         const li = document.createElement('LI');
         li.tabIndex = -1;
@@ -489,6 +507,10 @@ export default class Autocomplete
         li.id = this.attributeValues.getSuggestionId(index);
         li.innerText = this.attributeValues.options.show_all_for_postcode_text;
       
+        li.setAttribute('role', 'option');
+        li.setAttribute('aria-posinset', `${index + 1}`);
+        li.setAttribute('aria-setsize', `${length}`);
+
         return li;
     };
 
