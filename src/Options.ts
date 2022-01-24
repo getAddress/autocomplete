@@ -16,6 +16,9 @@ export class Options
     list_class_names:string[] = [];
     container_class_names:string[] = [];
     suggestion_class_names:string[] = [];
+    highlight_suggestion = true;
+    highlight_suggestion_start_tag = "<b>";
+    highlight_suggestion_end_tag = "</b>";
     
     constructor(options:IOptions = {})
     {
@@ -43,5 +46,8 @@ export interface IOptions{
     list_class_names?:string[];
     container_class_names?:string[];
     suggestion_class_names?:string[];
+    highlight_suggestion?:boolean;
+    highlight_suggestion_start_tag?:string;
+    highlight_suggestion_end_tag?:string;
 }
 

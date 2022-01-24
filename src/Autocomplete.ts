@@ -457,7 +457,18 @@ export default class Autocomplete
             }
         }
         li.id = this.attributeValues.getSuggestionId(index);
-        li.innerText = suggestion.address;
+
+        let address = suggestion.address;
+        if(this.attributeValues.options.highlight_suggestion)
+        {
+            const regexp = new RegExp(`\\b(${this.input.value.trim()})\\b`,"gi");
+            address = address.replace(regexp, `${this.attributeValues.options.highlight_suggestion_start_tag}$1${this.attributeValues.options.highlight_suggestion_end_tag}`);
+            li.innerHTML = address;
+        }
+        else{
+            li.innerText = address;
+        }
+
         li.dataset.id =suggestion.id;
 
         return li;
