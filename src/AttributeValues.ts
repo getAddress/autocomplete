@@ -5,13 +5,15 @@ export default class AttributeValues{
     
     readonly listId:string;
     readonly listClassName:string;
-    
+    readonly listAditionalClassNames:string[]
+
     readonly containerId:string
     readonly containerClassName:string;
     readonly containerFocusedClassName:string;
 
     readonly suggestionClassName:string;
     readonly suggestionFocusedClassName:string;
+    
     
     readonly id_prefix:string;
     readonly inputClassName:string;
@@ -31,6 +33,9 @@ export default class AttributeValues{
 
         this.listId = `${this.id_prefix}-list${suffix}`;
         this.listClassName = `${css_prefix}_list`;
+        if(options.list_class_names){
+            this.listAditionalClassNames  = options.list_class_names;
+          }
         
         this.containerId = `${this.id_prefix}-container${suffix}`;
         this.containerClassName = `${css_prefix}_container`;
@@ -43,7 +48,7 @@ export default class AttributeValues{
         if(options.input_class_names){
           this.inputAditionalClassNames  = options.input_class_names;
         }
-        //todo: should be able to add multiple/own class names.
+       
         this.inputShowClassName = `${css_prefix}_input_show`;
 
 

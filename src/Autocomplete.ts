@@ -61,6 +61,11 @@ export default class Autocomplete
         this.list.id = this.attributeValues.listId;
         this.list.hidden = true;
         this.list.className = this.attributeValues.listClassName;
+        if(this.attributeValues.listAditionalClassNames){
+            for(const name of this.attributeValues.listAditionalClassNames){
+                this.list.classList.add(name);
+            }
+        }
 
          // clear any current focus position when hovering into the list
         this.list.addEventListener('mouseenter', (event) => {
@@ -126,13 +131,13 @@ export default class Autocomplete
     };
 
     handlePageUpKey = (event: KeyboardEvent) => {
-        if (!this.list.hidden && event.target == this.input) {
+        if (!this.list.hidden) {
             event.preventDefault();
             this.setSuggestionFocus(event, 0);
         }
     }
     handlePageDownKey = (event: KeyboardEvent) => {
-        if (!this.list.hidden && event.target == this.input) {
+        if (!this.list.hidden) {
             event.preventDefault();
             this.setSuggestionFocus(event, this.list.children.length -1);
         }
@@ -332,7 +337,8 @@ export default class Autocomplete
         {
             if (this.selectedIndex < 0) {
                 this.setSuggestionFocus(event, 0);
-            } else {
+            } 
+            else {
                 this.setSuggestionFocus(event, this.selectedIndex + 1);
             }
         }
