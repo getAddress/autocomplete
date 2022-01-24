@@ -1,5 +1,4 @@
 import AttributeValues from "./AttributeValues";
-import { IOptions,Options } from "./Options";
 import Client, { AutocompleteAddress, AutocompleteOptions, Suggestion } from 'getaddress-api';
 import { OutputFields } from "./OutputFields";
 import { AddressSelectedEvent } from "./Events";
@@ -30,8 +29,8 @@ export default class Autocomplete
         this.documentClick = this.handleComponentBlur.bind(this);
 
         this.input.classList.add(this.attributeValues.inputClassName);
-        if(this.attributeValues.inputAditionalClassNames){
-            for(const name of this.attributeValues.inputAditionalClassNames){
+        if(this.attributeValues.inputAdditionalClassNames){
+            for(const name of this.attributeValues.inputAdditionalClassNames){
                 this.input.classList.add(name);
             }
         }
@@ -39,6 +38,11 @@ export default class Autocomplete
         this.container = document.createElement('DIV');
         this.container.id = this.attributeValues.containerId;
         this.container.className = this.attributeValues.containerClassName;
+        if(this.attributeValues.containerAdditionalClassNames){
+            for(const name of this.attributeValues.containerAdditionalClassNames){
+                this.container.classList.add(name);
+            }
+        }
 
         this.input.parentNode.insertBefore(this.container,this.input);
         
@@ -61,8 +65,8 @@ export default class Autocomplete
         this.list.id = this.attributeValues.listId;
         this.list.hidden = true;
         this.list.className = this.attributeValues.listClassName;
-        if(this.attributeValues.listAditionalClassNames){
-            for(const name of this.attributeValues.listAditionalClassNames){
+        if(this.attributeValues.listAdditionalClassNames){
+            for(const name of this.attributeValues.listAdditionalClassNames){
                 this.list.classList.add(name);
             }
         }
@@ -421,7 +425,7 @@ export default class Autocomplete
                     }
 
                     this.input.classList.add(this.attributeValues.inputShowClassName); 
-
+                        
                     this.list.hidden = false;
 
                     document.addEventListener('click', this.documentClick);
@@ -447,6 +451,11 @@ export default class Autocomplete
         const li = document.createElement('LI');
         li.tabIndex = -1;
         li.className = this.attributeValues.suggestionClassName;
+        if(this.attributeValues.suggestionAdditionalClassNames){
+            for(const name of this.attributeValues.suggestionAdditionalClassNames){
+                li.classList.add(name);
+            }
+        }
         li.id = this.attributeValues.getSuggestionId(index);
         li.innerText = suggestion.address;
         li.dataset.id =suggestion.id;

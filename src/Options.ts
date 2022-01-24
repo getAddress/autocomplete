@@ -14,6 +14,8 @@ export class Options
     input_class_names:string[] = [];
     max_list_height:string = "10.1em";
     list_class_names:string[] = [];
+    container_class_names:string[] = [];
+    suggestion_class_names:string[] = [];
     
     constructor(options:IOptions = {})
     {
@@ -39,5 +41,7 @@ export interface IOptions{
     input_class_names?:string[];
     max_list_height?:string;
     list_class_names?:string[];
+    container_class_names?:string[];
+    suggestion_class_names?:string[];
 }
 
