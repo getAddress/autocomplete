@@ -35,7 +35,7 @@ export default class Style{
         border-top: 1px dotted #ccc;
         margin: 0;
         margin-top: -1px;
-        max-height:10.1em;
+        max-height:${this.attributeValues.options.max_list_height};
         overflow-y:auto;
     }
    

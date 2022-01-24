@@ -30,6 +30,11 @@ export default class Autocomplete
         this.documentClick = this.handleComponentBlur.bind(this);
 
         this.input.classList.add(this.attributeValues.inputClassName);
+        if(this.attributeValues.inputAditionalClassNames){
+            for(const name of this.attributeValues.inputAditionalClassNames){
+                this.input.classList.add(name);
+            }
+        }
 
         this.container = document.createElement('DIV');
         this.container.id = this.attributeValues.containerId;

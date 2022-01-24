@@ -11,7 +11,9 @@ export class Options
     show_all_for_postcode_text  = "Show all..";
     alt_autocomplete_url:string = undefined;
     alt_get_url:string = undefined;
-
+    input_class_names:string[] = [];
+    max_list_height:string = "10.1em";
+    
     constructor(options:IOptions = {})
     {
         for (const prop in options) {
@@ -33,5 +35,7 @@ export interface IOptions{
     how_all_for_postcode_text?:string;
     alt_autocomplete_url?:string;
     alt_get_url?:string;
+    input_class_names?:string[];
+    max_list_height?:string;
 }
 

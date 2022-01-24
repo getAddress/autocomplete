@@ -15,6 +15,7 @@ export default class AttributeValues{
     
     readonly id_prefix:string;
     readonly inputClassName:string;
+    readonly inputAditionalClassNames:string[]
     readonly inputShowClassName:string;
 
     constructor(readonly options:Options, index:number)
@@ -39,6 +40,10 @@ export default class AttributeValues{
         this.suggestionFocusedClassName = `${css_prefix}_suggestion_focused`;
 
         this.inputClassName = `${css_prefix}_input`;
+        if(options.input_class_names){
+          this.inputAditionalClassNames  = options.input_class_names;
+        }
+        //todo: should be able to add multiple/own class names.
         this.inputShowClassName = `${css_prefix}_input_show`;
 
 
