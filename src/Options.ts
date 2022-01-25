@@ -19,6 +19,7 @@ export class Options
     highlight_suggestion = true;
     highlight_suggestion_start_tag = "<b>";
     highlight_suggestion_end_tag = "</b>";
+    list_width:string = undefined;
     
     constructor(options:IOptions = {})
     {
@@ -49,5 +50,6 @@ export interface IOptions{
     highlight_suggestion?:boolean;
     highlight_suggestion_start_tag?:string;
     highlight_suggestion_end_tag?:string;
+    list_width?:string;
 }
 
