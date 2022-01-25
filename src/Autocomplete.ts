@@ -16,8 +16,7 @@ export default class Autocomplete
     private list: HTMLElement;
     private selectedIndex = -1;
     private showAllClicked:boolean;
-    //private computedListHeight:number;
-
+    
     private documentClick: EventListenerObject;
 
     constructor(readonly input:HTMLInputElement,readonly client:Client,
@@ -101,14 +100,12 @@ export default class Autocomplete
             }
         });
 
-
         this.container.addEventListener('keydown', (event:KeyboardEvent) => {
             this.keyDownHandler(event);
         });
         this.container.addEventListener('keyup', (event:KeyboardEvent) => {
             this.handleKeyUp(event);
         });
-        
         
         this.container.appendChild(this.list);
     }
@@ -420,6 +417,9 @@ export default class Autocomplete
             autocompleteOptions.all = show_all;
             autocompleteOptions.top = this.attributeValues.options.suggestion_count;
             autocompleteOptions.template = this.attributeValues.options.suggestion_template;
+            if(this.attributeValues.options.filter){
+                autocompleteOptions.filter = this.attributeValues.options.filter;
+            }
 
             const query = this.input.value?.trim();
             const result = await this.client.autocomplete(query, autocompleteOptions);

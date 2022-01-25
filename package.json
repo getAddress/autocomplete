@@ -24,6 +24,6 @@
     "typescript": "^4.5.4"
   },
   "dependencies": {
-    "getaddress-api": "^1.1.9"
+    "getaddress-api": "^1.1.12"
   }
 }

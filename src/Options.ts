@@ -1,3 +1,4 @@
+import {AutocompleteFilter} from "getaddress-api";
 
 export class Options 
 {
@@ -22,6 +23,7 @@ export class Options
     suggestion_count = 6;
     auto_cal_list_height= true;
     suggestion_template= undefined;
+    filter:AutocompleteFilter=undefined;
 
     constructor(options:IOptions = {})
     {
@@ -55,5 +57,6 @@ export interface IOptions{
     suggestion_count?:number;
     auto_cal_list_height?:boolean;
     suggestion_template?:string;
+    filter?:AutocompleteFilter;
 }
 
