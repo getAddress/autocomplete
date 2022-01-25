@@ -6,6 +6,7 @@ export default class AttributeValues{
     readonly listId:string;
     readonly listClassName:string;
     readonly listAdditionalClassNames:string[]
+    readonly listClassNameShowAll:string;
 
     readonly containerId:string
     readonly containerClassName:string;
@@ -38,6 +39,8 @@ export default class AttributeValues{
         {
             this.listAdditionalClassNames  = options.list_class_names;
         }
+        this.listClassNameShowAll = `${css_prefix}_list_show`;
+
         
         this.containerId = `${this.id_prefix}-container${suffix}`;
         this.containerClassName = `${css_prefix}_container`;
@@ -59,7 +62,7 @@ export default class AttributeValues{
         }
        
         this.inputShowClassName = `${css_prefix}_input_show`;
-
+        //todo:
 
     }
 

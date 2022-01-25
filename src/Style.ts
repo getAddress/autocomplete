@@ -27,9 +27,14 @@ export default class Style{
         border: 1px solid #606060;
         margin: 0;
         margin-top: -1px;
-        max-height:${this.attributeValues.options.max_list_height};
         overflow-y:auto;
+        box-sizing: border-box;
     }
+
+    /* .${this.attributeValues.listClassNameShowAll}
+    {
+         max-height:${this.attributeValues.options.suggestion_count}em;
+    } */
    
     .${this.attributeValues.listClassName}:focus {
         border: none;

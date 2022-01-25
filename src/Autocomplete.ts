@@ -16,6 +16,7 @@ export default class Autocomplete
     private list: HTMLElement;
     private selectedIndex = -1;
     private showAllClicked:boolean;
+    //private computedListHeight:number;
 
     private documentClick: EventListenerObject;
 
@@ -400,14 +401,24 @@ export default class Autocomplete
         
     }
 
+    
     populateList = async (show_all:boolean = this.attributeValues.options.show_all_for_postcode)=>{
             
         const autocompleteOptions = new AutocompleteOptions();
             autocompleteOptions.all = show_all;
+            autocompleteOptions.top = this.attributeValues.options.suggestion_count;
 
             const query = this.input.value?.trim();
             const result = await this.client.autocomplete(query, autocompleteOptions);
             if(result.isSuccess){
+
+                if(this.attributeValues.options.auto_cal_list_height){
+                    this.list.style.removeProperty('max-height');
+                }
+                
+                const computedListHeight = this.list.offsetHeight;
+                const listChildCount = this.list.children.length;
+
                 const success = result.toSuccess();
                 const newItems:Node[] = [];
 
@@ -422,7 +433,7 @@ export default class Autocomplete
                         newItems.push(li);
                     }
                     
-                    if(showAllOption)
+                    if(showAllOption && success.suggestions.length)
                     {
                         const li = this.getShowAllListItem(this.list.children.length,totalLength);
                         newItems.push(li);
@@ -441,9 +452,25 @@ export default class Autocomplete
                     this.list.hidden = false;
                     this.input.setAttribute('aria-expanded', 'true');
                     this.list.setAttribute('aria-hidden', 'false');
+                    
+                    if(show_all)
+                    {
+                        this.list.classList.add(this.attributeValues.listClassNameShowAll); 
+                    }
+
+
+                    if(show_all && 
+                        this.attributeValues.options.auto_cal_list_height 
+                        && computedListHeight> 0
+                        && listChildCount<this.list.children.length)
+                    {
+                        this.list.style.maxHeight = `${computedListHeight}px`;
+                    }
+                   
 
                     document.addEventListener('click', this.documentClick);
                     
+
                 }
                 else
                 {
@@ -465,6 +492,7 @@ export default class Autocomplete
         this.list.setAttribute('aria-hidden', 'true');
         this.selectedIndex = -1;
         this.input.classList.remove(this.attributeValues.inputShowClassName); 
+        this.list.classList.remove(this.attributeValues.listClassNameShowAll); 
         document.removeEventListener('click', this.documentClick);
     };
 

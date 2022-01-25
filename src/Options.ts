@@ -12,7 +12,6 @@ export class Options
     alt_autocomplete_url:string = undefined;
     alt_get_url:string = undefined;
     input_class_names:string[] = [];
-    max_list_height:string = "10.1em";
     list_class_names:string[] = [];
     container_class_names:string[] = [];
     suggestion_class_names:string[] = [];
@@ -20,7 +19,9 @@ export class Options
     highlight_suggestion_start_tag = "<b>";
     highlight_suggestion_end_tag = "</b>";
     list_width:string = undefined;
-    
+    suggestion_count = 6;
+    auto_cal_list_height= true;
+
     constructor(options:IOptions = {})
     {
         for (const prop in options) {
@@ -43,7 +44,6 @@ export interface IOptions{
     alt_autocomplete_url?:string;
     alt_get_url?:string;
     input_class_names?:string[];
-    max_list_height?:string;
     list_class_names?:string[];
     container_class_names?:string[];
     suggestion_class_names?:string[];
@@ -51,5 +51,7 @@ export interface IOptions{
     highlight_suggestion_start_tag?:string;
     highlight_suggestion_end_tag?:string;
     list_width?:string;
+    suggestion_count?:number;
+    auto_cal_list_height?:boolean;
 }
 
