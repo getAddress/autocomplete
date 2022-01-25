@@ -21,6 +21,7 @@ export class Options
     list_width:string = undefined;
     suggestion_count = 6;
     auto_cal_list_height= true;
+    suggestion_template= undefined;
 
     constructor(options:IOptions = {})
     {
@@ -53,5 +54,6 @@ export interface IOptions{
     list_width?:string;
     suggestion_count?:number;
     auto_cal_list_height?:boolean;
+    suggestion_template?:string;
 }
 

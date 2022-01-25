@@ -407,6 +407,7 @@ export default class Autocomplete
         const autocompleteOptions = new AutocompleteOptions();
             autocompleteOptions.all = show_all;
             autocompleteOptions.top = this.attributeValues.options.suggestion_count;
+            autocompleteOptions.template = this.attributeValues.options.suggestion_template;
 
             const query = this.input.value?.trim();
             const result = await this.client.autocomplete(query, autocompleteOptions);
@@ -415,7 +416,7 @@ export default class Autocomplete
                 if(this.attributeValues.options.auto_cal_list_height){
                     this.list.style.removeProperty('max-height');
                 }
-                
+
                 const computedListHeight = this.list.offsetHeight;
                 const listChildCount = this.list.children.length;
 
