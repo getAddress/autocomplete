@@ -327,16 +327,28 @@ export default class Autocomplete
 
     handleKeyUp = (event: KeyboardEvent)=>{
         
-        if(event.code === 'Backspace' || event.code === 'Delete'){
-            if(this.input.value.length < this.attributeValues.options.minimum_characters)
+        if(event.code === 'Backspace' || event.code === 'Delete')
+        {
+            if(event){
+            const target =(event as Event).target
+            if (target == this.input)
             {
-                this.clearList(); 
+                if(this.input.value.length < this.attributeValues.options.minimum_characters)
+                {
+                    this.clearList(); 
+                }
+                else 
+                {
+                    this.populateList();
+                }
             }
-            else 
-            {
-                this.populateList();
+            else if(this.container.contains(target as HTMLElement)){
+                this.input.focus();
+                this.input.setSelectionRange(this.input.value.length,this.input.value.length+1);
             }
         }
+        }
+        
     };
 
 
