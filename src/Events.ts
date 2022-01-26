@@ -34,6 +34,7 @@ export class SuggestionsEvent
         element.dispatchEvent(evt);
     }
 }
+
 export class SuggestionsFailedEvent 
 {
     static dispatch(element:HTMLElement|Document, query:string,status:number, message:string){

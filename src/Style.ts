@@ -9,7 +9,8 @@ export default class Style{
     css= `
     .${this.attributeValues.containerClassName}
     {
-        display: contents;
+        display:${this.attributeValues.options.container_display};
+        flex-direction: column;
     }
     
     

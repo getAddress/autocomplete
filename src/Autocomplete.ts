@@ -101,15 +101,22 @@ export default class Autocomplete
         });
 
         this.container.addEventListener('keydown', (event:KeyboardEvent) => {
+            this.debug(event);
             this.keyDownHandler(event);
         });
         this.container.addEventListener('keyup', (event:KeyboardEvent) => {
+            this.debug(event);
             this.handleKeyUp(event);
         });
         
         this.container.appendChild(this.list);
     }
 
+    private debug = (data:any)=>{
+        if(this.attributeValues.options.debug){
+            console.log(data);
+        }
+    };
 
     keyDownHandler = (event: KeyboardEvent)=>{
         switch (event.code) {
@@ -234,8 +241,12 @@ export default class Autocomplete
                     let success = addressResult.toSuccess();
                     
                     this.bind(success.address);
-
                     AddressSelectedEvent.dispatch(this.input,id,success.address);
+                    
+                    if(this.attributeValues.options.input_focus_on_select){
+                        this.input.focus();
+                        this.input.setSelectionRange(this.input.value.length,this.input.value.length+1);
+                    }
                 }
                 else{
                     const failed = addressResult.toFailed();
@@ -302,7 +313,7 @@ export default class Autocomplete
 
     handleKeyDownDefault = (event: KeyboardEvent)=>{
         
-        let isPrintableKey = event.key.length === 1;
+        let isPrintableKey = event.key.length === 1 || event.key === 'Unidentified';
         if(isPrintableKey){
             clearTimeout(this.filterTimer);
             

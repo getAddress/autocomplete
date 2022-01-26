@@ -27,6 +27,9 @@ export class Options
     suggestion_template= undefined;
     filter:AutocompleteFilter=undefined;
     bind_output_fields=true;
+    container_display:'inline-flex'|'flex'|'contents'='inline-flex';
+    input_focus_on_select=true;
+    debug=false;
 
     constructor(options:IOptions = {})
     {
@@ -63,5 +66,8 @@ export interface IOptions{
     filter?:AutocompleteFilter;
     bind_output_fields?:boolean;
     output_fields?:IOutputFields;
+    container_display?:'inline-flex'|'flex'|'contents';
+    input_focus_on_select?:boolean;
+    debug?:boolean;
 }
 
