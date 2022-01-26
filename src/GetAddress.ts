@@ -15,7 +15,7 @@ class InstanceCounter
     }
 }
 
-export function autocomplete(id:string,api_key:string,output_fields?:IOutputFields, options?: IOptions){
+export function autocomplete(id:string,api_key:string, options?: IOptions){
 
     const textbox = document.getElementById(id) as HTMLInputElement;
     
@@ -24,7 +24,7 @@ export function autocomplete(id:string,api_key:string,output_fields?:IOutputFiel
     }
     const allOptions = new Options(options);
     const client = new Client(api_key, allOptions.alt_autocomplete_url,allOptions.alt_get_url);
-    const outputFields = new OutputFields(output_fields);
+    const outputFields = new OutputFields(allOptions.output_fields);
 
     const index = InstanceCounter.Next();
 

@@ -1,9 +1,11 @@
 import {AutocompleteFilter} from "getaddress-api";
+import { IOutputFields } from "./OutputFields";
 
 export class Options 
 {
     id_prefix?:string = "getAddress-autocomplete";
     css_prefix?:string = "getAddress_autocomplete";
+    output_fields:IOutputFields = undefined;
     delay:number = 200;
     minimum_characters:number = 2; 
     clear_list_on_select = true;
@@ -24,6 +26,7 @@ export class Options
     auto_cal_list_height= true;
     suggestion_template= undefined;
     filter:AutocompleteFilter=undefined;
+    bind_output_fields=true;
 
     constructor(options:IOptions = {})
     {
@@ -58,5 +61,7 @@ export interface IOptions{
     auto_cal_list_height?:boolean;
     suggestion_template?:string;
     filter?:AutocompleteFilter;
+    bind_output_fields?:boolean;
+    output_fields?:IOutputFields;
 }
 

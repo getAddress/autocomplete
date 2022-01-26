@@ -249,7 +249,7 @@ export default class Autocomplete
 
     private bind = (address:AutocompleteAddress)=>
     {
-        if(address)
+        if(address && this.attributeValues.options.bind_output_fields)
         {
             this.setOutputfield(this.output_fields.building_name,address.building_name);
             this.setOutputfield(this.output_fields.building_number,address.building_number);
