@@ -9,15 +9,13 @@ export default class Style{
     css= `
     .${this.attributeValues.containerClassName}
     {
-        display: flex;
-        flex-direction: column;
+        display: contents;
     }
     
     
     .${this.attributeValues.inputClassName} {
         outline:0;
     }
-    
     
     .${this.attributeValues.listClassName}
     {
@@ -29,18 +27,15 @@ export default class Style{
         margin-top: -1px;
         overflow-y:auto;
         box-sizing: border-box;
+        background-color: #fff;
     }
 
-    /* .${this.attributeValues.listClassNameShowAll}
-    {
-         max-height:${this.attributeValues.options.suggestion_count}em;
-    } */
-   
     .${this.attributeValues.listClassName}:focus {
         border: none;
         outline: none;
         box-shadow: none;
      }
+
     .${this.attributeValues.suggestionClassName}:hover,
     .${this.attributeValues.suggestionFocusedClassName} {
          background: #f3f3f3; 
