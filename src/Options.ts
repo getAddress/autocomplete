@@ -11,7 +11,7 @@ export class Options
     clear_list_on_select = true;
     select_on_focus = true;
     show_all_for_postcode = false;
-    show_all_for_postcode_text  = "Show all..";
+    show_all_for_postcode_text  = "<b>Show all..</b>";
     alt_autocomplete_url:string = undefined;
     alt_get_url:string = undefined;
     input_class_names:string[] = [];

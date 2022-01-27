@@ -223,7 +223,7 @@ export default class Autocomplete
             const suggestions = this.list.children;
             const suggestion = suggestions[this.selectedIndex] as HTMLElement;
             
-            if(suggestion.innerText === this.attributeValues.options.show_all_for_postcode_text)
+            if(suggestion.innerHTML === this.attributeValues.options.show_all_for_postcode_text)
             {
                 this.showAllClicked = true;
                 this.populateList(true);
@@ -557,7 +557,7 @@ export default class Autocomplete
         li.tabIndex = -1;
         li.className = this.attributeValues.suggestionClassName;
         li.id = this.attributeValues.getSuggestionId(index);
-        li.innerText = this.attributeValues.options.show_all_for_postcode_text;
+        li.innerHTML = this.attributeValues.options.show_all_for_postcode_text;
       
         li.setAttribute('role', 'option');
         li.setAttribute('aria-posinset', `${index + 1}`);
