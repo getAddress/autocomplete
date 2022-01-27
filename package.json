@@ -1,6 +1,6 @@
 {
   "name": "getaddress-autocomplete",
-  "version": "1.0.6",
+  "version": "1.0.8",
   "description": "",
   "main": "./dist/getaddress-autocomplete.mjs",
   "type": "module",
@@ -24,6 +24,6 @@
     "typescript": "^4.5.4"
   },
   "dependencies": {
-    "getaddress-api": "^1.1.12"
+    "getaddress-api": "^1.1.13"
   }
 }

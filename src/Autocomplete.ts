@@ -537,7 +537,7 @@ export default class Autocomplete
         {
             const regexp = new RegExp(`\\b(${this.input.value.trim()})\\b`,"gi");
             address = address.replace(regexp, `${this.attributeValues.options.highlight_suggestion_start_tag}$1${this.attributeValues.options.highlight_suggestion_end_tag}`);
-            li.innerText = address;
+            li.innerHTML = address;
         }
         else{
             li.innerText = address;
