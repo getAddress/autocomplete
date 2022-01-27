@@ -223,7 +223,7 @@ export default class Autocomplete
             const suggestions = this.list.children;
             const suggestion = suggestions[this.selectedIndex] as HTMLElement;
             
-            if(suggestion.innerHTML === this.attributeValues.options.show_all_for_postcode_text)
+            if(suggestion.innerText === this.attributeValues.options.show_all_for_postcode_text)
             {
                 this.showAllClicked = true;
                 this.populateList(true);
@@ -537,7 +537,7 @@ export default class Autocomplete
         {
             const regexp = new RegExp(`\\b(${this.input.value.trim()})\\b`,"gi");
             address = address.replace(regexp, `${this.attributeValues.options.highlight_suggestion_start_tag}$1${this.attributeValues.options.highlight_suggestion_end_tag}`);
-            li.innerHTML = address;
+            li.innerText = address;
         }
         else{
             li.innerText = address;
@@ -557,7 +557,7 @@ export default class Autocomplete
         li.tabIndex = -1;
         li.className = this.attributeValues.suggestionClassName;
         li.id = this.attributeValues.getSuggestionId(index);
-        li.innerHTML = this.attributeValues.options.show_all_for_postcode_text;
+        li.innerHTML = `${this.attributeValues.options.show_all_for_postcode_start_tag}${this.attributeValues.options.show_all_for_postcode_text}${this.attributeValues.options.show_all_for_postcode_end_tag}`;
       
         li.setAttribute('role', 'option');
         li.setAttribute('aria-posinset', `${index + 1}`);
