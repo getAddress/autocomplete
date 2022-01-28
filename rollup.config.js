@@ -16,20 +16,13 @@ export default [
     {
         input: "src/GetAddress.ts",
         output: 
-        [
             {
                 file:"dist/getaddress-autocomplete-" + version + ".js",
                 format:"iife", 
                 name:'getAddress',
                 sourcemap:  "inline"
-            },
-            {
-                file:"dist/getaddress-autocomplete.js",
-                format:"iife", 
-                name:'getAddress',
-                sourcemap:  "inline"
             }
-        ]
+        
         ,plugins:[nodeResolve(),ts(
             {tsconfig: {
                 declaration: false
@@ -39,18 +32,11 @@ export default [
     {
         input: "dist/getaddress-autocomplete.mjs",
         output: 
-        [
             {
                 file:"dist/getaddress-autocomplete-" + version + ".min.js",
                 format:"iife",
                 name:'getAddress'
             },
-            {
-                file:"dist/getaddress-autocomplete.min.js",
-                format:"iife",
-                name:'getAddress'
-            }
-        ],
         plugins:[terser()]
     }
 ]

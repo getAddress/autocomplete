@@ -16,6 +16,8 @@ export default class Style{
     
     .${this.attributeValues.inputClassName} {
         outline:0;
+        width: 100%;
+        box-sizing: border-box;
     }
     
     .${this.attributeValues.listClassName}
@@ -43,6 +45,10 @@ export default class Style{
          cursor: pointer;
          outline:0;
     }
+    .${this.attributeValues.suggestionShowAllClassName}{
+       
+    }
+
     `;
     cssNoListWidth = 
     `
@@ -50,7 +56,9 @@ export default class Style{
         outline: -webkit-focus-ring-color auto 1px;
     }
     .${this.attributeValues.inputShowClassName} {
-        border: 2px solid transparent;
+       /*  border: 2px solid transparent; */
+        
+        border: 1px solid #606060;
         border-bottom: none;
     }
     .${this.attributeValues.listClassName}

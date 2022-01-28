@@ -16,6 +16,7 @@ export default class AttributeValues{
     readonly suggestionClassName:string;
     readonly suggestionFocusedClassName:string;
     readonly suggestionAdditionalClassNames:string[]
+    readonly suggestionShowAllClassName:string;
     
     readonly id_prefix:string;
     readonly inputClassName:string;
@@ -52,6 +53,7 @@ export default class AttributeValues{
         
         this.suggestionClassName = `${css_prefix}_suggestion`;
         this.suggestionFocusedClassName = `${css_prefix}_suggestion_focused`;
+        this.suggestionShowAllClassName = `${css_prefix}_suggestion_show_all`;
         if(options.suggestion_class_names){
             this.suggestionAdditionalClassNames  = options.suggestion_class_names;
           }

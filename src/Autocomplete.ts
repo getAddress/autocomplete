@@ -229,6 +229,9 @@ export default class Autocomplete
                 this.populateList(true);
                 this.input.focus();
             }
+            else if(!this.attributeValues.options.enable_get){
+                this.clearList();
+            }
             else
             {
                 if(this.attributeValues.options.clear_list_on_select){
@@ -436,7 +439,7 @@ export default class Autocomplete
             const result = await this.client.autocomplete(query, autocompleteOptions);
             if(result.isSuccess){
 
-                if(this.attributeValues.options.auto_cal_list_height){
+                if(this.attributeValues.options.auto_calc_list_height){
                     this.list.style.removeProperty('max-height');
                 }
 
@@ -484,7 +487,7 @@ export default class Autocomplete
 
 
                     if(show_all && 
-                        this.attributeValues.options.auto_cal_list_height 
+                        this.attributeValues.options.auto_calc_list_height 
                         && computedListHeight> 0
                         && listChildCount<this.list.children.length)
                     {
@@ -535,7 +538,8 @@ export default class Autocomplete
         let address = suggestion.address;
         if(this.attributeValues.options.highlight_suggestion)
         {
-            const regexp = new RegExp(`\\b(${this.input.value.trim()})\\b`,"gi");
+            let regexvalue = this.input.value.trim().replace(/ /g,',* +')
+            const regexp = new RegExp(`\\b(${regexvalue})`,"gi");
             address = address.replace(regexp, `${this.attributeValues.options.highlight_suggestion_start_tag}$1${this.attributeValues.options.highlight_suggestion_end_tag}`);
             li.innerHTML = address;
         }
@@ -556,8 +560,9 @@ export default class Autocomplete
         const li = document.createElement('LI');
         li.tabIndex = -1;
         li.className = this.attributeValues.suggestionClassName;
+        li.classList.add(this.attributeValues.suggestionShowAllClassName);
         li.id = this.attributeValues.getSuggestionId(index);
-        li.innerHTML = `${this.attributeValues.options.show_all_for_postcode_start_tag}${this.attributeValues.options.show_all_for_postcode_text}${this.attributeValues.options.show_all_for_postcode_end_tag}`;
+        li.innerText = this.attributeValues.options.show_all_for_postcode_text;
       
         li.setAttribute('role', 'option');
         li.setAttribute('aria-posinset', `${index + 1}`);

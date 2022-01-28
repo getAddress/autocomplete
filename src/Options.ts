@@ -12,8 +12,6 @@ export class Options
     select_on_focus = true;
     show_all_for_postcode = false;
     show_all_for_postcode_text  = "Show all..";
-    show_all_for_postcode_start_tag  = "<b>";
-    show_all_for_postcode_end_tag  = "</b>";
     alt_autocomplete_url:string = undefined;
     alt_get_url:string = undefined;
     input_class_names:string[] = [];
@@ -25,13 +23,14 @@ export class Options
     highlight_suggestion_end_tag = "</b>";
     list_width:string = undefined;
     suggestion_count = 6;
-    auto_cal_list_height= true;
+    auto_calc_list_height= true;
     suggestion_template= undefined;
     filter:AutocompleteFilter=undefined;
     bind_output_fields=true;
-    container_display:'inline-flex'|'flex'|'contents'='inline-flex';
+    container_display:'inline-flex'|'flex'|'contents'='contents';
     input_focus_on_select=true;
     debug=false;
+    enable_get=true;
 
     constructor(options:IOptions = {})
     {
@@ -63,7 +62,7 @@ export interface IOptions{
     highlight_suggestion_end_tag?:string;
     list_width?:string;
     suggestion_count?:number;
-    auto_cal_list_height?:boolean;
+    auto_calc_list_height?:boolean;
     suggestion_template?:string;
     filter?:AutocompleteFilter;
     bind_output_fields?:boolean;
@@ -71,7 +70,6 @@ export interface IOptions{
     container_display?:'inline-flex'|'flex'|'contents';
     input_focus_on_select?:boolean;
     debug?:boolean;
-    show_all_for_postcode_start_tag?:string;
-    show_all_for_postcode_end_tag?:string;
+    enable_get?:boolean;
 }
 
