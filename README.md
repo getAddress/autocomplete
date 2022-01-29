@@ -8,7 +8,7 @@ npm install getaddress-autocomplete
 ```
 ### Or CDN
 ```
-<script src="https://cdn.getaddress.io/scripts/getaddress-autocomplete-1.0.14.min.js"></script>
+<script src="https://cdn.getaddress.io/scripts/getaddress-autocomplete-1.0.17.min.js"></script>
 ```
 
 ## Usage
@@ -93,7 +93,6 @@ getAddress.autocomplete(
           suggestion_template:undefined, /* the suggestion template (see Autocomplete API)*/
           filter:undefined, /* the suggestion filter (see Autocomplete API)*/
           bind_output_fields:true, /* if true, bind the output_fields to the address*/
-          container_display:'contents', /* container css display - can be 'inline-flex' or 'flex' or 'contents' */
           input_focus_on_select:true,  /* if true, sets the focus to the textbox after selecting an address*/
           debug:false, /* if true, logs behavior */
           enable_get:true /* if true, retreives address on select */

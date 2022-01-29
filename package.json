@@ -1,19 +1,24 @@
 {
   "name": "getaddress-autocomplete",
-  "version": "1.0.14",
-  "description": "",
+  "version": "1.0.17",
+  "description": "GetAddress.io - Autocomplete plug-in",
   "main": "./dist/getaddress-autocomplete.mjs",
   "type": "module",
   "types": "./dist/getaddress-autocomplete.d.ts",
+  "homepage": "https://github.com/getAddress/autocomplete/blob/main/README.md",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/getAddress/autocomplete"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "cleanDist": "rimraf dist/*",
     "rollup": "rollup -c",
     "build": "npm-run-all cleanDist rollup"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": ["postcode","getAddress","address","plugin","UK","autocomplete"],
+  "author": "getAddress()",
+  "license": "MIT",
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^13.1.3",
     "npm-run-all": "^4.1.5",

@@ -434,7 +434,7 @@ export default class Autocomplete
             if(this.attributeValues.options.filter){
                 autocompleteOptions.filter = this.attributeValues.options.filter;
             }
-
+            
             const query = this.input.value?.trim();
             const result = await this.client.autocomplete(query, autocompleteOptions);
             if(result.isSuccess){

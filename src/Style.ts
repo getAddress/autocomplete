@@ -9,13 +9,13 @@ export default class Style{
     css= `
     .${this.attributeValues.containerClassName}
     {
-        display:${this.attributeValues.options.container_display};
-        flex-direction: column;
+        position: relative;
+        outline: 0;
     }
     
     
     .${this.attributeValues.inputClassName} {
-        outline:0;
+        
         width: 100%;
         box-sizing: border-box;
     }
@@ -53,17 +53,20 @@ export default class Style{
     cssNoListWidth = 
     `
     .${this.attributeValues.containerFocusedClassName}{
-        outline: -webkit-focus-ring-color auto 1px;
+       
     }
     .${this.attributeValues.inputShowClassName} {
-       /*  border: 2px solid transparent; */
         
+        outline: 0;
         border: 1px solid #606060;
         border-bottom: none;
     }
     .${this.attributeValues.listClassName}
     {
         border-top: 1px dotted #ccc;
+        position: absolute;
+        left: 0px;
+        right: 0px
     }
     `;
     cssWithListWidth = 
