@@ -62,6 +62,12 @@ export default class Autocomplete
             }
             this.selectedIndex = -1;
         });
+
+        this.input.addEventListener('paste', (event) => {
+            if(this.input.value){
+                this.populateList(false);
+            }
+        });
         
         this.container.addEventListener('focusout', (event) => {
           
@@ -460,7 +466,9 @@ export default class Autocomplete
                         newItems.push(li);
                     }
                     
-                    if(showAllOption && success.suggestions.length)
+                    if(showAllOption 
+                        && success.suggestions.length 
+                        && (success.suggestions.length) === autocompleteOptions.top)
                     {
                         const li = this.getShowAllListItem(this.list.children.length,totalLength);
                         newItems.push(li);

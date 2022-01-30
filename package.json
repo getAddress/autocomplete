@@ -1,6 +1,6 @@
 {
   "name": "getaddress-autocomplete",
-  "version": "1.0.17",
+  "version": "1.0.18",
   "description": "GetAddress.io - Autocomplete plug-in",
   "main": "./dist/getaddress-autocomplete.mjs",
   "type": "module",
