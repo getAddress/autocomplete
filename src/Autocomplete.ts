@@ -64,9 +64,7 @@ export default class Autocomplete
         });
 
         this.input.addEventListener('paste', (event) => {
-            if(this.input.value){
-                this.populateList(false);
-            }
+             setTimeout(()=>{this.populateList(false);},100);
         });
         
         this.container.addEventListener('focusout', (event) => {
