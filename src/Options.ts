@@ -15,6 +15,7 @@ export class Options
     alt_autocomplete_url:string = undefined;
     alt_get_url:string = undefined;
     input_class_names:string[] = [];
+    input_show_class_names:string[] = [];
     list_class_names:string[] = [];
     container_class_names:string[] = [];
     suggestion_class_names:string[] = [];
@@ -53,6 +54,7 @@ export interface IOptions{
     alt_autocomplete_url?:string;
     alt_get_url?:string;
     input_class_names?:string[];
+    input_show_class_names?:string[];
     list_class_names?:string[];
     container_class_names?:string[];
     suggestion_class_names?:string[];

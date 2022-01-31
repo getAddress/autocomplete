@@ -6,12 +6,15 @@ export default class AttributeValues{
     readonly listId:string;
     readonly listClassName:string;
     readonly listAdditionalClassNames:string[]
+    
     readonly listClassNameShowAll:string;
 
     readonly containerId:string
     readonly containerClassName:string;
-    readonly containerFocusedClassName:string;
     readonly containerAdditionalClassNames:string[]
+
+    readonly containerFocusedClassName:string;
+    
 
     readonly suggestionClassName:string;
     readonly suggestionFocusedClassName:string;
@@ -21,7 +24,9 @@ export default class AttributeValues{
     readonly id_prefix:string;
     readonly inputClassName:string;
     readonly inputAdditionalClassNames:string[]
+
     readonly inputShowClassName:string;
+    readonly inputShowAdditionalClassNames:string[]
 
     constructor(readonly options:Options, index:number)
     {
@@ -64,7 +69,9 @@ export default class AttributeValues{
         }
        
         this.inputShowClassName = `${css_prefix}_input_show`;
-        //todo:
+        if(options.input_show_class_names){
+            this.inputShowAdditionalClassNames  = options.input_show_class_names;
+        }
 
     }
 

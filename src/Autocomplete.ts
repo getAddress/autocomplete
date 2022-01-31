@@ -480,7 +480,7 @@ export default class Autocomplete
                         toFocus.classList.add(this.attributeValues.suggestionFocusedClassName);
                     }
 
-                    this.input.classList.add(this.attributeValues.inputShowClassName); 
+                    this.addInputShowClassNames();
                         
                     this.list.hidden = false;
                     this.input.setAttribute('aria-expanded', 'true');
@@ -518,13 +518,30 @@ export default class Autocomplete
             }
     };
 
+    private addInputShowClassNames =()=>{
+        this.input.classList.add(this.attributeValues.inputShowClassName); 
+        if(this.attributeValues.inputShowAdditionalClassNames){
+            for(const name of this.attributeValues.inputShowAdditionalClassNames){
+                this.input.classList.add(name);
+            }
+        }
+    }
+    private removeInputShowClassNames =()=>{
+        this.input.classList.remove(this.attributeValues.inputShowClassName); 
+        if(this.attributeValues.inputShowAdditionalClassNames){
+            for(const name of this.attributeValues.inputShowAdditionalClassNames){
+                this.input.classList.remove(name);
+            }
+        }
+    }
+
     clearList = ()=>{
         this.list.replaceChildren(...[]);
         this.list.hidden = true;
         this.input.setAttribute('aria-expanded', 'false');
         this.list.setAttribute('aria-hidden', 'true');
         this.selectedIndex = -1;
-        this.input.classList.remove(this.attributeValues.inputShowClassName); 
+        this.removeInputShowClassNames();
         this.list.classList.remove(this.attributeValues.listClassNameShowAll); 
         document.removeEventListener('click', this.documentClick);
     };
