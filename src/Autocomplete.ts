@@ -509,12 +509,12 @@ export default class Autocomplete
                 {
                     this.clearList(); 
                 }
-                SuggestionsEvent.dispatch(this.list,query, success.suggestions);
+                SuggestionsEvent.dispatch(this.input,query, success.suggestions);
             }
             else
             {
                 const failed = result.toFailed();
-                SuggestionsFailedEvent.dispatch(this.list,query,failed.status,failed.message);
+                SuggestionsFailedEvent.dispatch(this.input,query,failed.status,failed.message);
             }
     };
 
@@ -584,6 +584,12 @@ export default class Autocomplete
         li.tabIndex = -1;
         li.className = this.attributeValues.suggestionClassName;
         li.classList.add(this.attributeValues.suggestionShowAllClassName);
+        if(this.attributeValues.suggestionAdditionalClassNames){
+            for(const name of this.attributeValues.suggestionAdditionalClassNames){
+                li.classList.add(name);
+            }
+        }
+
         li.id = this.attributeValues.getSuggestionId(index);
         li.innerText = this.attributeValues.options.show_all_for_postcode_text;
       
