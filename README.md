@@ -42,9 +42,9 @@ npm install getaddress-autocomplete
 The full list of options, and their defaults:
 ```
 getAddress.autocomplete(
-        id:'textbox_id',
-        api_key: 'API_KEY',
-        options={
+        'textbox_id',
+        'API_KEY',
+        /*options*/{
           output_fields:{
             formatted_address_0:'formatted_address_0',  /* The id of the element bound to 'formatted_address[0]' */
             formatted_address_1:'formatted_address_1',  /* The id of the element bound to 'formatted_address[1]' */
