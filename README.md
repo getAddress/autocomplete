@@ -42,7 +42,6 @@ npm install getaddress-autocomplete
 The full list of options, and their defaults:
 ```
 getAddress.autocomplete(
-    {
         id:'textbox_id',
         api_key: 'API_KEY',
         options={
@@ -97,7 +96,7 @@ getAddress.autocomplete(
           debug:false, /* if true, logs behavior */
           enable_get:true /* if true, retreives address on select */
         }
-    });
+    );
 ```
 ## Events
 ```
