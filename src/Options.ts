@@ -20,6 +20,7 @@ export class Options
     container_class_names:string[] = [];
     suggestion_class_names:string[] = [];
     list_show_all_class_names:string[] = [];
+    container_focused_class_names:string[] = [];
     highlight_suggestion = true;
     highlight_suggestion_start_tag = "<b>";
     highlight_suggestion_end_tag = "</b>";
@@ -73,5 +74,6 @@ export interface IOptions{
     debug?:boolean;
     enable_get?:boolean;
     list_show_all_class_names?:string[];
+    container_focused_class_names?:string[];
 }
 

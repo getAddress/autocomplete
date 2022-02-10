@@ -7,14 +7,14 @@ export default class AttributeValues{
     readonly listAdditionalClassNames:string[]
     
     readonly listShowAllClassName:string;
-    readonly listShowAllClassNames:string[]
-    //todo: add addtional class names
-
+    readonly listShowAllAdditionalClassNames:string[]
+    
     readonly containerId:string
     readonly containerClassName:string;
     readonly containerAdditionalClassNames:string[]
 
     readonly containerFocusedClassName:string;
+    readonly containerFocusedAdditionalClassNames:string[]
     //todo: add addtional class names
 
     readonly suggestionClassName:string;
@@ -54,15 +54,20 @@ export default class AttributeValues{
 
         if(options.list_show_all_class_names)
         {
-            this.listShowAllClassNames  = options.list_show_all_class_names;
+            this.listShowAllAdditionalClassNames  = options.list_show_all_class_names;
         }
 
         this.containerId = `${this.id_prefix}-container${suffix}`;
         this.containerClassName = `${css_prefix}_container`;
-        this.containerFocusedClassName = `${css_prefix}_container_focused`;
         if(options.container_class_names)
         {
             this.containerAdditionalClassNames  = options.container_class_names;
+        }
+
+        this.containerFocusedClassName = `${css_prefix}_container_focused`;
+        if(options.container_focused_class_names)
+        {
+            this.containerFocusedAdditionalClassNames  = options.container_focused_class_names;
         }
         
         this.suggestionClassName = `${css_prefix}_suggestion`;

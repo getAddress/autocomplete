@@ -53,7 +53,8 @@ export default class Autocomplete
         this.input.parentNode.insertBefore(this.container,this.input);
         
         this.input.addEventListener('focus', (event) => {
-            this.container.classList.add(this.attributeValues.containerFocusedClassName);
+            this.addContainerFocusedClassNames();
+            
             if(this.attributeValues.options.select_on_focus){
                 this.input.select();
             }
@@ -187,7 +188,8 @@ export default class Autocomplete
             
             if(!this.showAllClicked){
                 this.clearList();
-                this.container.classList.remove(this.attributeValues.containerFocusedClassName);
+                this.removeContainerFocusedClassNames();
+                
             }
             this.showAllClicked = false;
             
@@ -524,6 +526,24 @@ export default class Autocomplete
             }
     };
 
+    private addContainerFocusedClassNames = () =>{
+        this.container.classList.add(this.attributeValues.containerFocusedClassName);
+        
+        if(this.attributeValues.containerFocusedAdditionalClassNames){
+            for(const name of this.attributeValues.containerFocusedAdditionalClassNames){
+                this.container.classList.add(name);
+            }
+        }
+    };
+    private removeContainerFocusedClassNames = () =>{
+        this.container.classList.remove(this.attributeValues.containerFocusedClassName);
+        if(this.attributeValues.containerFocusedAdditionalClassNames){
+            for(const name of this.attributeValues.containerFocusedAdditionalClassNames){
+                this.container.classList.remove(name);
+            }
+        }
+    };
+
     private addInputShowClassNames =()=>{
         this.input.classList.add(this.attributeValues.inputShowClassName); 
         if(this.attributeValues.inputShowAdditionalClassNames){
@@ -543,17 +563,17 @@ export default class Autocomplete
 
     private removeListShowAllClassNames =()=>{
         this.list.classList.remove(this.attributeValues.listShowAllClassName); 
-        if(this.attributeValues.listShowAllClassNames){
-            for(const name of this.attributeValues.listShowAllClassNames){
+        if(this.attributeValues.listShowAllAdditionalClassNames){
+            for(const name of this.attributeValues.listShowAllAdditionalClassNames){
                 this.list.classList.remove(name);
             }
         }
     }
-    
+
     private addListShowAllClassNames =()=>{
         this.list.classList.add(this.attributeValues.listShowAllClassName); 
-        if(this.attributeValues.listShowAllClassNames){
-            for(const name of this.attributeValues.listShowAllClassNames){
+        if(this.attributeValues.listShowAllAdditionalClassNames){
+            for(const name of this.attributeValues.listShowAllAdditionalClassNames){
                 this.list.classList.add(name);
             }
         }
