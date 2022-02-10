@@ -17,12 +17,20 @@ class InstanceCounter
 
 export function autocomplete(id:string,api_key:string, options?: IOptions){
 
-    const textbox = document.getElementById(id) as HTMLInputElement;
-    
+    if(!id){
+        return;
+    }
+
+    const allOptions = new Options(options);
+
+    let textbox = document.getElementById(id) as HTMLInputElement;
+    if(!textbox){
+        textbox = document.querySelector(id) as HTMLInputElement;
+    }
     if(!textbox){
         return;
     }
-    const allOptions = new Options(options);
+    
     const client = new Client(api_key, allOptions.alt_autocomplete_url,allOptions.alt_get_url);
     const outputFields = new OutputFields(allOptions.output_fields);
 

@@ -4,9 +4,6 @@ import { OutputFields } from "./OutputFields";
 import { AddressSelectedEvent, AddressSelectedFailedEvent, SuggestionsEvent, SuggestionsFailedEvent } from "./Events";
 
 
-//todo: autocomplete filter
-//todo: aria
-
 export default class Autocomplete
 {
 
@@ -305,7 +302,16 @@ export default class Autocomplete
 
     private setOutputfield = (fieldName:string, fieldValue:string) =>
     {
-            let element = document.getElementById(fieldName);
+            if(!fieldName){
+                return;
+            }
+
+            let element = document.getElementById(fieldName) as HTMLElement;
+            
+            if(!element){
+                element = document.querySelector(fieldName) as HTMLElement;
+            }
+
             if(element)
             {
                if(element instanceof HTMLInputElement){
