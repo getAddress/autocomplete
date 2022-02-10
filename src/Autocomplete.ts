@@ -494,7 +494,7 @@ export default class Autocomplete
                     
                     if(show_all)
                     {
-                        this.list.classList.add(this.attributeValues.listClassNameShowAll); 
+                        this.addListShowAllClassNames();
                     }
 
 
@@ -541,6 +541,24 @@ export default class Autocomplete
         }
     }
 
+    private removeListShowAllClassNames =()=>{
+        this.list.classList.remove(this.attributeValues.listShowAllClassName); 
+        if(this.attributeValues.listShowAllClassNames){
+            for(const name of this.attributeValues.listShowAllClassNames){
+                this.list.classList.remove(name);
+            }
+        }
+    }
+    
+    private addListShowAllClassNames =()=>{
+        this.list.classList.add(this.attributeValues.listShowAllClassName); 
+        if(this.attributeValues.listShowAllClassNames){
+            for(const name of this.attributeValues.listShowAllClassNames){
+                this.list.classList.add(name);
+            }
+        }
+    }
+
     clearList = ()=>{
         this.list.replaceChildren(...[]);
         this.list.hidden = true;
@@ -548,7 +566,7 @@ export default class Autocomplete
         this.list.setAttribute('aria-hidden', 'true');
         this.selectedIndex = -1;
         this.removeInputShowClassNames();
-        this.list.classList.remove(this.attributeValues.listClassNameShowAll); 
+        this.removeListShowAllClassNames();
         document.removeEventListener('click', this.documentClick);
     };
 

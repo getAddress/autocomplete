@@ -6,7 +6,8 @@ export default class AttributeValues{
     readonly listClassName:string;
     readonly listAdditionalClassNames:string[]
     
-    readonly listClassNameShowAll:string;
+    readonly listShowAllClassName:string;
+    readonly listShowAllClassNames:string[]
     //todo: add addtional class names
 
     readonly containerId:string
@@ -49,7 +50,12 @@ export default class AttributeValues{
         {
             this.listAdditionalClassNames  = options.list_class_names;
         }
-        this.listClassNameShowAll = `${css_prefix}_list_show`;
+        this.listShowAllClassName = `${css_prefix}_list_show`;
+
+        if(options.list_show_all_class_names)
+        {
+            this.listShowAllClassNames  = options.list_show_all_class_names;
+        }
 
         this.containerId = `${this.id_prefix}-container${suffix}`;
         this.containerClassName = `${css_prefix}_container`;

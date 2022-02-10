@@ -81,6 +81,7 @@ getAddress.autocomplete(
           alt_get_url:undefined,  /* alterative local get URL (when API key is not used) */
           input_class_names:[],  /* textbox class names */
           list_class_names:[],  /* list class names */
+          list_show_all_class_names:[], /* list show all class names */
           container_class_names:[], /* container class names */
           suggestion_class_names:[], /* suggestion class names */
           highlight_suggestion:true, /* if true, highlights matched suggestion text */
