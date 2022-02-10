@@ -85,6 +85,7 @@ getAddress.autocomplete(
           container_class_names:[], /* container class names */
           container_focused_class_names:[], /* container focused class names */
           suggestion_class_names:[], /* suggestion class names */
+          suggestion_show_all_class_names:[], /* suggestion show all class names */
           highlight_suggestion:true, /* if true, highlights matched suggestion text */
           highlight_suggestion_start_tag:'<b>',  /* highlighted suggestion text start tag */
           highlight_suggestion_end_tag:'</b>',  /* highlighted suggestion text end tag */

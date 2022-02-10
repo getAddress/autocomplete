@@ -15,16 +15,17 @@ export default class AttributeValues{
 
     readonly containerFocusedClassName:string;
     readonly containerFocusedAdditionalClassNames:string[]
-    //todo: add addtional class names
+   
 
     readonly suggestionClassName:string;
     readonly suggestionAdditionalClassNames:string[]
 
     readonly suggestionFocusedClassName:string;
-    //todo: add addtional class names
+    readonly suggestionFocusedAdditionalClassNames:string[]
+
     
     readonly suggestionShowAllClassName:string;
-    //todo: add addtional class names
+    readonly suggestionShowAllAdditionalClassNames:string[]
     
     readonly id_prefix:string;
     readonly inputClassName:string;
@@ -71,12 +72,20 @@ export default class AttributeValues{
         }
         
         this.suggestionClassName = `${css_prefix}_suggestion`;
-        this.suggestionFocusedClassName = `${css_prefix}_suggestion_focused`;
-        this.suggestionShowAllClassName = `${css_prefix}_suggestion_show_all`;
         if(options.suggestion_class_names){
             this.suggestionAdditionalClassNames  = options.suggestion_class_names;
         }
 
+        this.suggestionShowAllClassName = `${css_prefix}_suggestion_show_all`;
+        if(options.suggestion_show_all_class_names){
+            this.suggestionShowAllAdditionalClassNames  = options.suggestion_show_all_class_names;
+        }
+
+        this.suggestionFocusedClassName = `${css_prefix}_suggestion_focused`;
+        if(options.suggestion_focused_class_names){
+            this.suggestionFocusedAdditionalClassNames  = options.suggestion_focused_class_names;
+        }
+        
         this.inputClassName = `${css_prefix}_input`;
         if(options.input_class_names){
           this.inputAdditionalClassNames  = options.input_class_names;

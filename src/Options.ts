@@ -19,6 +19,8 @@ export class Options
     list_class_names:string[] = [];
     container_class_names:string[] = [];
     suggestion_class_names:string[] = [];
+    suggestion_focused_class_names:string[] = [];
+    suggestion_show_all_class_names:string[] = [];
     list_show_all_class_names:string[] = [];
     container_focused_class_names:string[] = [];
     highlight_suggestion = true;
@@ -75,5 +77,7 @@ export interface IOptions{
     enable_get?:boolean;
     list_show_all_class_names?:string[];
     container_focused_class_names?:string[];
+    suggestion_focused_class_names?:string[];
+    suggestion_show_all_class_names?:string[];
 }
 

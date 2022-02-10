@@ -416,11 +416,11 @@ export default class Autocomplete
             return;
         }
 
-        const toFocus = suggestions[index] as HTMLElement;
-        if (toFocus) {
+        const focusedSuggestion = suggestions[index] as HTMLElement;
+        if (focusedSuggestion) {
             this.selectedIndex = index;
-            toFocus.classList.add(this.attributeValues.suggestionFocusedClassName);
-            toFocus.focus();
+            this.addSuggestionFocusedClassName(focusedSuggestion);
+            focusedSuggestion.focus();
             return;
         }
 
@@ -428,12 +428,15 @@ export default class Autocomplete
 
     }
 
-    removeSuggestionFocusedClassName(suggestions: HTMLCollection) {
+    addSuggestionFocusedClassName = (suggestion:HTMLElement)=> {
+        suggestion.classList.add(this.attributeValues.suggestionFocusedClassName);
+    }
+
+    removeSuggestionFocusedClassName = (suggestions: HTMLCollection)=> {
         
         for (let i = 0; i < suggestions.length; i++) {
             suggestions[i].classList.remove(this.attributeValues.suggestionFocusedClassName);
         }
-        
     }
 
     
@@ -525,6 +528,8 @@ export default class Autocomplete
                 SuggestionsFailedEvent.dispatch(this.input,query,failed.status,failed.message);
             }
     };
+
+    
 
     private addContainerFocusedClassNames = () =>{
         this.container.classList.add(this.attributeValues.containerFocusedClassName);
@@ -627,7 +632,15 @@ export default class Autocomplete
         const li = document.createElement('LI');
         li.tabIndex = -1;
         li.className = this.attributeValues.suggestionClassName;
+        
         li.classList.add(this.attributeValues.suggestionShowAllClassName);
+        
+        if(this.attributeValues.suggestionShowAllAdditionalClassNames){
+            for(const name of this.attributeValues.suggestionShowAllAdditionalClassNames){
+                li.classList.add(name);
+            }
+        }
+
         if(this.attributeValues.suggestionAdditionalClassNames){
             for(const name of this.attributeValues.suggestionAdditionalClassNames){
                 li.classList.add(name);
