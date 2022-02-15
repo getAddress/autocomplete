@@ -7,15 +7,17 @@ import AttributeValues from "./AttributeValues";
 
 class InstanceCounter
 {
-    private static index = 0;
-    static Next(){
-        const returnValue =  InstanceCounter.index;
-        InstanceCounter.index+=1;
-        return returnValue;
+    public static instances:Autocomplete[] = [];
+
+    static add(autocomplete:Autocomplete){
+        this.instances.push(autocomplete);
     }
+
+    
 }
 
-export function autocomplete(id:string,api_key:string, options?: IOptions){
+export function autocomplete(id:string,api_key:string, options?: IOptions)
+{
 
     if(!id){
         return;
@@ -34,15 +36,25 @@ export function autocomplete(id:string,api_key:string, options?: IOptions){
     const client = new Client(api_key, allOptions.alt_autocomplete_url,allOptions.alt_get_url);
     const outputFields = new OutputFields(allOptions.output_fields);
 
-    const index = InstanceCounter.Next();
+    const index = InstanceCounter.instances.length;
 
     const attributeValues = new AttributeValues(allOptions,index);
     
     const autocomplete = new Autocomplete(textbox,client,outputFields,attributeValues);
     autocomplete.build();
+    
     if(index === 0){
         const style = new Style(attributeValues);
         style.inject();
     }
     
+    InstanceCounter.add(autocomplete);
+}
+
+export function destroy()
+{
+    for(const instance of InstanceCounter.instances){
+        instance.destroy();
+    }
+    InstanceCounter.instances = [];
 }

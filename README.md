@@ -8,7 +8,7 @@ npm install getaddress-autocomplete
 ```
 ### Or CDN
 ```
-<script src="https://cdn.getaddress.io/scripts/getaddress-autocomplete-1.0.24.min.js"></script>
+<script src="https://cdn.getaddress.io/scripts/getaddress-autocomplete-1.1.0.min.js"></script>
 ```
 
 ## Usage

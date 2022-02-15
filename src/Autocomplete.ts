@@ -13,7 +13,6 @@ export default class Autocomplete
     private list: HTMLElement;
     private selectedIndex = -1;
     private showAllClicked:boolean;
-    
     private documentClick: EventListenerObject;
 
     constructor(readonly input:HTMLInputElement,readonly client:Client,
@@ -23,6 +22,75 @@ export default class Autocomplete
             output_fields.formatted_address_0 = this.input.id;
         }
     }
+
+    public destroy(){
+        this.destroyContainer();
+        this.destroyInput();
+        this.destroyList();
+    }
+
+    private destroyList()
+    {
+        this.list.remove();
+    }
+
+    private destroyContainer(){
+
+        this.container.removeEventListener('keydown',this.onContainerKeyDown);
+        this.container.removeEventListener('keyup',this.onContainerKeyUp);
+        this.container.removeEventListener('focusout',this.onContainerFocusOut);
+
+        const children = Array.from(this.container.childNodes);
+        this.container.replaceWith(...children);
+    }
+
+    private destroyInput(){
+
+        this.input.classList.remove(this.attributeValues.inputClassName);
+        if(this.attributeValues.inputAdditionalClassNames){
+            for(const name of this.attributeValues.inputAdditionalClassNames){
+                this.input.classList.remove(name);
+            }
+        }
+        this.removeInputShowClassNames();
+
+        this.input.removeAttribute('aria-expanded');
+        this.input.removeAttribute('autocomplete');
+        this.input.removeAttribute('aria-autocomplete');
+        this.input.removeAttribute('role');
+        this.input.removeAttribute('aria-owns');
+
+        this.input.removeEventListener('focus',this.onInputFocus);
+        this.input.removeEventListener('paste',this.onInputPaste);
+    }
+
+    private onInputFocus =  (event) => {
+        this.addContainerFocusedClassNames();
+        
+        if(this.attributeValues.options.select_on_focus){
+            this.input.select();
+        }
+        this.selectedIndex = -1;
+    };
+
+    private onInputPaste = (event) => {
+        setTimeout(()=>{this.populateList(false);},100);
+    };
+
+    private onContainerKeyUp = (event:KeyboardEvent) => {
+        this.debug(event);
+        this.handleKeyUp(event);
+    };
+
+    private onContainerKeyDown = (event:KeyboardEvent) => {
+        this.debug(event);
+        this.keyDownHandler(event);
+    };
+
+    private onContainerFocusOut = (event) => {
+          
+        this.handleComponentBlur(event, false);
+     }
 
     public build()
     {
@@ -34,6 +102,7 @@ export default class Autocomplete
                 this.input.classList.add(name);
             }
         }
+
         this.input.setAttribute('aria-expanded', 'false');
         this.input.setAttribute('autocomplete', 'off');
         this.input.setAttribute('aria-autocomplete', 'list');
@@ -52,23 +121,11 @@ export default class Autocomplete
 
         this.input.parentNode.insertBefore(this.container,this.input);
         
-        this.input.addEventListener('focus', (event) => {
-            this.addContainerFocusedClassNames();
-            
-            if(this.attributeValues.options.select_on_focus){
-                this.input.select();
-            }
-            this.selectedIndex = -1;
-        });
+        this.input.addEventListener('focus', this.onInputFocus);
 
-        this.input.addEventListener('paste', (event) => {
-             setTimeout(()=>{this.populateList(false);},100);
-        });
+        this.input.addEventListener('paste', this.onInputPaste);
         
-        this.container.addEventListener('focusout', (event) => {
-          
-           this.handleComponentBlur(event, false);
-        });
+        this.container.addEventListener('focusout', this.onContainerFocusOut);
 
         this.container.appendChild(this.input);
 
@@ -83,7 +140,6 @@ export default class Autocomplete
         }
         this.list.setAttribute('role', 'listbox');
         this.list.setAttribute('aria-hidden', 'true');
-
 
         this.list.addEventListener('mouseenter', (event) => {
             const suggestions = this.list.children;
@@ -102,14 +158,8 @@ export default class Autocomplete
             }
         });
 
-        this.container.addEventListener('keydown', (event:KeyboardEvent) => {
-            this.debug(event);
-            this.keyDownHandler(event);
-        });
-        this.container.addEventListener('keyup', (event:KeyboardEvent) => {
-            this.debug(event);
-            this.handleKeyUp(event);
-        });
+        this.container.addEventListener('keydown', this.onContainerKeyDown);
+        this.container.addEventListener('keyup', this.onContainerKeyUp);
         
         this.container.appendChild(this.list);
     }
