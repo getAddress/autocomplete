@@ -18,9 +18,7 @@ export default class Autocomplete
     constructor(readonly input:HTMLInputElement,readonly client:Client,
         readonly output_fields:OutputFields, readonly attributeValues:AttributeValues)
     {
-        if(!output_fields.formatted_address_0){
-            output_fields.formatted_address_0 = this.input.id;
-        }
+        
     }
 
     public destroy(){
