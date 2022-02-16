@@ -35,6 +35,7 @@ export class Options
     input_focus_on_select=true;
     debug=false;
     enable_get=true;
+    set_default_output_field_names=true;
 
     constructor(options:IOptions = {})
     {
@@ -79,5 +80,6 @@ export interface IOptions{
     container_focused_class_names?:string[];
     suggestion_focused_class_names?:string[];
     suggestion_show_all_class_names?:string[];
+    set_default_output_field_names?:boolean;
 }
 

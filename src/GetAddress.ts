@@ -35,7 +35,7 @@ export function autocomplete(id:string,api_key:string, options?: IOptions)
     
     const client = new Client(api_key, allOptions.alt_autocomplete_url,allOptions.alt_get_url);
     
-    const outputFields = new OutputFields(allOptions.output_fields);
+    const outputFields = new OutputFields(allOptions.output_fields,allOptions.set_default_output_field_names);
     if(!outputFields.formatted_address_0){
         outputFields.formatted_address_0 = id;
     }

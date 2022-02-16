@@ -62,6 +62,7 @@ getAddress.autocomplete(
             sub_building_number:'sub_building_number',  /* The id of the element bound to 'sub_building_number' */
             sub_building_name:'sub_building_name',  /* The id of the element bound to 'sub_building_name' */
             thoroughfare:'thoroughfare',  /* The id of the element bound to 'thoroughfare' */
+            town_or_city:'town_or_city',/* The id of the element bound to 'town_or_city' */
             county:'county',  /* The id of the element bound to 'county' */
             country:'country',  /* The id of the element bound to 'country' */
             district:'district',  /* The id of the element bound to 'district' */
@@ -97,7 +98,8 @@ getAddress.autocomplete(
           bind_output_fields:true, /* if true, bind the output_fields to the address*/
           input_focus_on_select:true,  /* if true, sets the focus to the textbox after selecting an address*/
           debug:false, /* if true, logs behavior */
-          enable_get:true /* if true, retreives address on select */
+          enable_get:true /* if true, retreives address on select */,
+          set_default_output_field_names:true /* if true, defaults output field names to JSON field names*/
         }
     );
 ```
