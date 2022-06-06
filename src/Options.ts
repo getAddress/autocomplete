@@ -29,7 +29,7 @@ export class Options
     list_width:string = undefined;
     suggestion_count = 6;
     auto_calc_list_height= true;
-    suggestion_template= undefined;
+    suggestion_template= "{formatted_address}{postcode,, }{postcode}";
     filter:AutocompleteFilter=undefined;
     bind_output_fields=true;
     input_focus_on_select=true;

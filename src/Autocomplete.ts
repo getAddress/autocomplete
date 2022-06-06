@@ -150,8 +150,16 @@ export default class Autocomplete
                 const suggestions = Array.from(this.list.children);
                 if (suggestions.length) 
                 {
-                    const suggestionIndex = suggestions.indexOf(event.target as HTMLElement);
-                    this.handleSuggestionSelected(event, suggestionIndex);
+                        var element = event.target
+                        
+                        while(element instanceof HTMLElement && element.tagName !== "LI")
+                        {
+                            element = element.parentElement;
+                        }
+
+                        const suggestionIndex = suggestions.indexOf(element as HTMLElement);
+                        this.handleSuggestionSelected(event, suggestionIndex);
+                    
                 }
             }
         });
