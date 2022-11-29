@@ -498,10 +498,12 @@ export default class Autocomplete
     
     populateList = async (show_all:boolean = this.attributeValues.options.show_all_for_postcode)=>{
             
-        const autocompleteOptions = new AutocompleteOptions();
-            autocompleteOptions.all = show_all;
-            autocompleteOptions.top = this.attributeValues.options.suggestion_count;
-            autocompleteOptions.template = this.attributeValues.options.suggestion_template;
+            const autocompleteOptions:Partial<AutocompleteOptions> = {
+                    all:show_all,
+                    top:this.attributeValues.options.suggestion_count,
+                    template:this.attributeValues.options.suggestion_template
+            };
+
             if(this.attributeValues.options.filter){
                 autocompleteOptions.filter = this.attributeValues.options.filter;
             }
