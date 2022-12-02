@@ -55,7 +55,7 @@ export interface IOptions{
     clear_list_on_select?:boolean;
     select_on_focus?:boolean;
     show_all_for_postcode?:boolean;
-    how_all_for_postcode_text?:string;
+    show_all_for_postcode_text?:string;
     alt_autocomplete_url?:string;
     alt_get_url?:string;
     input_class_names?:string[];
