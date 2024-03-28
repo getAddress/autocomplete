@@ -4,35 +4,35 @@ export default class AttributeValues{
     
     readonly listId:string;
     readonly listClassName:string;
-    readonly listAdditionalClassNames:string[]
+    readonly listAdditionalClassNames:string[]|undefined = undefined;
     
     readonly listShowAllClassName:string;
-    readonly listShowAllAdditionalClassNames:string[]
+    readonly listShowAllAdditionalClassNames:string[]|undefined = undefined;
     
     readonly containerId:string
     readonly containerClassName:string;
-    readonly containerAdditionalClassNames:string[]
+    readonly containerAdditionalClassNames:string[] |undefined = undefined;
 
     readonly containerFocusedClassName:string;
-    readonly containerFocusedAdditionalClassNames:string[]
+    readonly containerFocusedAdditionalClassNames:string[]|undefined = undefined;
    
 
     readonly suggestionClassName:string;
-    readonly suggestionAdditionalClassNames:string[]
+    readonly suggestionAdditionalClassNames:string[]|undefined = undefined;
 
     readonly suggestionFocusedClassName:string;
-    readonly suggestionFocusedAdditionalClassNames:string[]
+    readonly suggestionFocusedAdditionalClassNames:string[]|undefined = undefined;
 
     
     readonly suggestionShowAllClassName:string;
-    readonly suggestionShowAllAdditionalClassNames:string[]
+    readonly suggestionShowAllAdditionalClassNames:string[]|undefined = undefined;
     
-    readonly id_prefix:string;
+    readonly id_prefix:string |undefined= "";
     readonly inputClassName:string;
-    readonly inputAdditionalClassNames:string[]
+    readonly inputAdditionalClassNames:string[]|undefined = undefined;
 
     readonly inputShowClassName:string;
-    readonly inputShowAdditionalClassNames:string[]
+    readonly inputShowAdditionalClassNames:string[]|undefined = undefined;
 
     constructor(readonly options:Options, index:number)
     {

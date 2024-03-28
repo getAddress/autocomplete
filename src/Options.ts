@@ -1,85 +1,49 @@
-import {AutocompleteFilter} from "getaddress-api";
-import { IOutputFields } from "./OutputFields";
+import {AutocompleteFilter} from 'getaddress-api';
+import { OutputFields } from "./OutputFields";
 
 export class Options 
 {
+    static show_all_for_postcode_defaut = false;
+    static show_all_for_postcode_text_default = "Show all..";
     id_prefix?:string = "getAddress-autocomplete";
     css_prefix?:string = "getAddress_autocomplete";
-    output_fields:IOutputFields = undefined;
-    delay:number = 200;
-    minimum_characters:number = 2; 
-    clear_list_on_select = true;
-    select_on_focus = true;
-    show_all_for_postcode = false;
-    show_all_for_postcode_text  = "Show all..";
-    alt_autocomplete_url:string = undefined;
-    alt_get_url:string = undefined;
-    input_class_names:string[] = [];
-    input_show_class_names:string[] = [];
-    list_class_names:string[] = [];
-    container_class_names:string[] = [];
-    suggestion_class_names:string[] = [];
-    suggestion_focused_class_names:string[] = [];
-    suggestion_show_all_class_names:string[] = [];
-    list_show_all_class_names:string[] = [];
-    container_focused_class_names:string[] = [];
-    highlight_suggestion = true;
-    highlight_suggestion_start_tag = "<b>";
-    highlight_suggestion_end_tag = "</b>";
-    list_width:string = undefined;
-    suggestion_count = 6;
-    auto_calc_list_height= true;
-    suggestion_template= "{formatted_address}{postcode,, }{postcode}";
-    filter:AutocompleteFilter=undefined;
-    bind_output_fields=true;
-    input_focus_on_select=true;
-    debug=false;
-    enable_get=true;
-    set_default_output_field_names=true;
+    output_fields?:Partial<OutputFields> = undefined;
+    delay?:number = 200;
+    minimum_characters?:number = 2; 
+    clear_list_on_select?:boolean = true;
+    select_on_focus? = true;
+    show_all_for_postcode? = Options.show_all_for_postcode_defaut;
+    show_all_for_postcode_text?  = Options.show_all_for_postcode_text_default;
+    alt_autocomplete_url?:string = undefined;
+    alt_get_url?:string  = undefined;
+    input_class_names?:string[] = [];
+    input_show_class_names?:string[] = [];
+    list_class_names?:string[] = [];
+    container_class_names?:string[] = [];
+    suggestion_class_names?:string[] = [];
+    suggestion_focused_class_names?:string[] = [];
+    suggestion_show_all_class_names?:string[] = [];
+    list_show_all_class_names?:string[] = [];
+    container_focused_class_names?:string[] = [];
+    highlight_suggestion? = true;
+    highlight_suggestion_start_tag? = "<b>";
+    highlight_suggestion_end_tag? = "</b>";
+    list_width?:string  = undefined;
+    suggestion_count? = 6;
+    auto_calc_list_height?= true;
+    suggestion_template?= "{formatted_address}{postcode,, }{postcode}";
+    filter?:Partial<AutocompleteFilter> =undefined;
+    bind_output_fields?=true;
+    input_focus_on_select?=true;
+    debug?=false;
+    enable_get?=true;
+    set_default_output_field_names?=true;
 
-    constructor(options:IOptions = {})
-    {
-        for (const prop in options) {
-            if (options.hasOwnProperty(prop) && typeof options[prop] !== 'undefined') {
-                this[prop] = options[prop];
-            }
-        }
+    constructor(options: Partial<Options> = {}) {
+        Object.assign(this, options);
     }
+
 }
 
-export interface IOptions{
-    id_prefix?:string;
-    css_prefix?:string;
-    delay?:number;
-    minimum_characters?:number;
-    clear_list_on_select?:boolean;
-    select_on_focus?:boolean;
-    show_all_for_postcode?:boolean;
-    show_all_for_postcode_text?:string;
-    alt_autocomplete_url?:string;
-    alt_get_url?:string;
-    input_class_names?:string[];
-    input_show_class_names?:string[];
-    list_class_names?:string[];
-    container_class_names?:string[];
-    suggestion_class_names?:string[];
-    highlight_suggestion?:boolean;
-    highlight_suggestion_start_tag?:string;
-    highlight_suggestion_end_tag?:string;
-    list_width?:string;
-    suggestion_count?:number;
-    auto_calc_list_height?:boolean;
-    suggestion_template?:string;
-    filter?:AutocompleteFilter;
-    bind_output_fields?:boolean;
-    output_fields?:IOutputFields;
-    input_focus_on_select?:boolean;
-    debug?:boolean;
-    enable_get?:boolean;
-    list_show_all_class_names?:string[];
-    container_focused_class_names?:string[];
-    suggestion_focused_class_names?:string[];
-    suggestion_show_all_class_names?:string[];
-    set_default_output_field_names?:boolean;
-}
+
 

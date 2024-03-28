@@ -2,18 +2,19 @@ import AttributeValues from "./AttributeValues";
 import Client, { AutocompleteAddress, AutocompleteOptions, Suggestion } from 'getaddress-api';
 import { OutputFields } from "./OutputFields";
 import { AddressSelectedEvent, AddressSelectedFailedEvent, SuggestionsEvent, SuggestionsFailedEvent } from "./Events";
+import { Options } from "./Options";
 
 
 export default class Autocomplete
 {
 
-    private filterTimer: ReturnType<typeof setTimeout>
-    private blurTimer: ReturnType<typeof setTimeout>
-    private container:HTMLElement;
-    private list: HTMLElement;
+    private filterTimer: ReturnType<typeof setTimeout> | undefined;
+    private blurTimer: ReturnType<typeof setTimeout> | undefined;
+    private container:HTMLElement|undefined = undefined;
+    private list: HTMLElement|undefined = undefined;
     private selectedIndex = -1;
-    private showAllClicked:boolean;
-    private documentClick: EventListenerObject;
+    private showAllClicked:boolean = false;
+    private documentClick: any | undefined;
 
     constructor(readonly input:HTMLInputElement,readonly client:Client,
         readonly output_fields:OutputFields, readonly attributeValues:AttributeValues)
@@ -29,17 +30,21 @@ export default class Autocomplete
 
     private destroyList()
     {
-        this.list.remove();
+        if(this.list !== undefined){
+            this.list.remove();
+        }
     }
 
     private destroyContainer(){
 
-        this.container.removeEventListener('keydown',this.onContainerKeyDown);
-        this.container.removeEventListener('keyup',this.onContainerKeyUp);
-        this.container.removeEventListener('focusout',this.onContainerFocusOut);
+        if(this.container !== undefined){
+            this.container.removeEventListener('keydown',this.onContainerKeyDown);
+            this.container.removeEventListener('keyup',this.onContainerKeyUp);
+            this.container.removeEventListener('focusout',this.onContainerFocusOut);
 
-        const children = Array.from(this.container.childNodes);
-        this.container.replaceWith(...children);
+            const children = Array.from(this.container.childNodes);
+            this.container.replaceWith(...children);
+        }
     }
 
     private destroyInput(){
@@ -62,7 +67,7 @@ export default class Autocomplete
         this.input.removeEventListener('paste',this.onInputPaste);
     }
 
-    private onInputFocus =  (event) => {
+    private onInputFocus =  (event:any) => {
         this.addContainerFocusedClassNames();
         
         if(this.attributeValues.options.select_on_focus){
@@ -71,7 +76,7 @@ export default class Autocomplete
         this.selectedIndex = -1;
     };
 
-    private onInputPaste = (event) => {
+    private onInputPaste = (event:any) => {
         setTimeout(()=>{this.populateList(false);},100);
     };
 
@@ -85,7 +90,7 @@ export default class Autocomplete
         this.keyDownHandler(event);
     };
 
-    private onContainerFocusOut = (event) => {
+    private onContainerFocusOut = (event:any) => {
           
         this.handleComponentBlur(event, false);
      }
@@ -116,12 +121,14 @@ export default class Autocomplete
                 this.container.classList.add(name);
             }
         }
-
+        if(this.input?.parentNode != null)
+        {
         this.input.parentNode.insertBefore(this.container,this.input);
         
         this.input.addEventListener('focus', this.onInputFocus);
 
         this.input.addEventListener('paste', this.onInputPaste);
+        }
         
         this.container.addEventListener('focusout', this.onContainerFocusOut);
 
@@ -140,12 +147,14 @@ export default class Autocomplete
         this.list.setAttribute('aria-hidden', 'true');
 
         this.list.addEventListener('mouseenter', (event) => {
-            const suggestions = this.list.children;
-            this.removeSuggestionFocusedClassName(suggestions);
+            if(this.list !== undefined){
+                const suggestions = this.list.children;
+                this.removeSuggestionFocusedClassName(suggestions);
+            }
         });
        
         this.list.addEventListener('click', (event) => {
-            if (event.target !== this.list) 
+            if (this.list !== undefined && event.target !== this.list) 
             {
                 const suggestions = Array.from(this.list.children);
                 if (suggestions.length) 
@@ -209,20 +218,20 @@ export default class Autocomplete
     };
 
     handlePageUpKey = (event: KeyboardEvent) => {
-        if (!this.list.hidden) {
+        if (this.list !== undefined && !this.list.hidden) {
             event.preventDefault();
             this.setSuggestionFocus(event, 0);
         }
     }
     handlePageDownKey = (event: KeyboardEvent) => {
-        if (!this.list.hidden) {
+        if (this.list !== undefined && !this.list.hidden) {
             event.preventDefault();
             this.setSuggestionFocus(event, this.list.children.length -1);
         }
     }
 
     handleHomeKey = (event: KeyboardEvent) => {
-        if (!this.list.hidden && event.target !== this.input) {
+        if (this.list !== undefined  && !this.list.hidden && event.target !== this.input) {
             event.preventDefault();
             this.setSuggestionFocus(event, 0);
         }
@@ -234,9 +243,11 @@ export default class Autocomplete
 
         const delay: number = force ? 0 : 100;
         this.blurTimer = setTimeout(() => {
-            const activeElem: Element = document.activeElement;
+            const activeElem = document.activeElement;
+
             if (!force &&
                 activeElem &&
+                this.container !== undefined &&
                 this.container.contains(activeElem)
             ) {
                 return;
@@ -254,7 +265,7 @@ export default class Autocomplete
 
 
     handleEndKey = (event: KeyboardEvent) => {
-        if (!this.list.hidden) {
+        if (this.list !== undefined && !this.list.hidden) {
             const suggestions = this.list.children;
             if (suggestions.length) {
                 event.preventDefault();
@@ -264,7 +275,7 @@ export default class Autocomplete
     }
 
     handleEnterKey = (event: KeyboardEvent) =>{
-        if (!this.list.hidden) {
+        if (this.list !== undefined && !this.list.hidden) {
             event.preventDefault();
             if (this.selectedIndex > -1) {
                 this.handleSuggestionSelected(event, this.selectedIndex);
@@ -277,7 +288,7 @@ export default class Autocomplete
         this.setSuggestionFocus(event,indexNumber);
         this.showAllClicked = false;
 
-        if(this.selectedIndex > -1)
+        if(this.selectedIndex > -1 && this.list !== undefined )
         {
             const suggestions = this.list.children;
             const suggestion = suggestions[this.selectedIndex] as HTMLElement;
@@ -297,7 +308,7 @@ export default class Autocomplete
                     this.clearList();
                 }
 
-                const id = suggestion.dataset.id;
+                const id = suggestion.dataset.id as string;
                 const addressResult = await this.client.get(id);
                 if(addressResult.isSuccess){
                     let success = addressResult.toSuccess();
@@ -358,7 +369,7 @@ export default class Autocomplete
         }
     };
 
-    private setOutputfield = (fieldName:string, fieldValue:string) =>
+    private setOutputfield = (fieldName:string|undefined, fieldValue:string) =>
     {
             if(!fieldName){
                 return;
@@ -390,7 +401,7 @@ export default class Autocomplete
             
             this.filterTimer = setTimeout(() => 
             {
-                if(this.input.value.length >= this.attributeValues.options.minimum_characters){
+                if(this.attributeValues.options.minimum_characters && this.input.value.length >= this.attributeValues.options.minimum_characters){
                     this.populateList();
                 }
                 else{
@@ -398,7 +409,7 @@ export default class Autocomplete
                 }
             },this.attributeValues.options.delay);
         }
-        else if(!this.list.hidden && this.input.value.length < this.attributeValues.options.minimum_characters)
+        else if(this.attributeValues.options.minimum_characters && this.list !== undefined && !this.list.hidden && this.input.value.length < this.attributeValues.options.minimum_characters)
         {
             this.clearList(); 
         }
@@ -412,7 +423,7 @@ export default class Autocomplete
             const target =(event as Event).target
             if (target == this.input)
             {
-                if(this.input.value.length < this.attributeValues.options.minimum_characters)
+                if(this.attributeValues.options.minimum_characters && this.input.value.length < this.attributeValues.options.minimum_characters)
                 {
                     this.clearList(); 
                 }
@@ -421,7 +432,7 @@ export default class Autocomplete
                     this.populateList();
                 }
             }
-            else if(this.container.contains(target as HTMLElement)){
+            else if(this.container !== undefined && this.container.contains(target as HTMLElement)){
                 this.input.focus();
                 this.input.setSelectionRange(this.input.value.length,this.input.value.length+1);
             }
@@ -433,7 +444,7 @@ export default class Autocomplete
 
     handleUpKey(event: KeyboardEvent) {
         event.preventDefault();
-        if (!this.list.hidden) {
+        if (this.list !== undefined && !this.list.hidden) {
             this.setSuggestionFocus(event, this.selectedIndex - 1);
         }
     }
@@ -441,7 +452,7 @@ export default class Autocomplete
     handleDownKey = (event: KeyboardEvent) => {
         event.preventDefault();
 
-        if (!this.list.hidden) 
+        if (this.list !== undefined && !this.list.hidden) 
         {
             if (this.selectedIndex < 0) {
                 this.setSuggestionFocus(event, 0);
@@ -454,32 +465,34 @@ export default class Autocomplete
 
     setSuggestionFocus = (event:Event, index:number) => {
        
-        const suggestions = this.list.children;
-       
-        this.removeSuggestionFocusedClassName(suggestions);
+        if(this.list !== undefined)
+        {
+            const suggestions = this.list.children;
+        
+            this.removeSuggestionFocusedClassName(suggestions);
 
-        if (index < 0 || !suggestions.length) {
-            this.selectedIndex = -1;
-            if (event && (event as Event).target !== this.input) {
-                this.input.focus();
+            if (index < 0 || !suggestions.length) {
+                this.selectedIndex = -1;
+                if (event && (event as Event).target !== this.input) {
+                    this.input.focus();
+                }
+                return;
             }
-            return;
-        }
 
-        if (index >= suggestions.length) {
-            this.selectedIndex = suggestions.length - 1;
-            this.setSuggestionFocus(event, this.selectedIndex);
-            return;
-        }
+            if (index >= suggestions.length) {
+                this.selectedIndex = suggestions.length - 1;
+                this.setSuggestionFocus(event, this.selectedIndex);
+                return;
+            }
 
-        const focusedSuggestion = suggestions[index] as HTMLElement;
-        if (focusedSuggestion) {
-            this.selectedIndex = index;
-            this.addSuggestionFocusedClassName(focusedSuggestion);
-            focusedSuggestion.focus();
-            return;
+            const focusedSuggestion = suggestions[index] as HTMLElement;
+            if (focusedSuggestion) {
+                this.selectedIndex = index;
+                this.addSuggestionFocusedClassName(focusedSuggestion);
+                focusedSuggestion.focus();
+                return;
+            }
         }
-
         this.selectedIndex = -1;
 
     }
@@ -496,7 +509,7 @@ export default class Autocomplete
     }
 
     
-    populateList = async (show_all:boolean = this.attributeValues.options.show_all_for_postcode)=>{
+    populateList = async (show_all:boolean = this.attributeValues.options.show_all_for_postcode ?? Options.show_all_for_postcode_defaut)=>{
             
             const autocompleteOptions:Partial<AutocompleteOptions> = {
                     all:show_all,
@@ -510,13 +523,13 @@ export default class Autocomplete
             
             const query = this.input.value?.trim();
             const result = await this.client.autocomplete(query, autocompleteOptions);
-            if(result.isSuccess){
+            if(result.isSuccess && this.list !== undefined ){
 
-                if(this.attributeValues.options.auto_calc_list_height){
+                if(this.attributeValues.options.auto_calc_list_height && this.list !== undefined){
                     this.list.style.removeProperty('max-height');
                 }
 
-                const computedListHeight = this.list.offsetHeight;
+                //const computedListHeight = this.list.offsetHeight;
                 const listChildCount = this.list.children.length;
 
                 const success = result.toSuccess();
@@ -563,10 +576,10 @@ export default class Autocomplete
 
                     if(show_all && 
                         this.attributeValues.options.auto_calc_list_height 
-                        && computedListHeight> 0
+                        && this.list.offsetHeight > 0
                         && listChildCount<this.list.children.length)
                     {
-                        this.list.style.maxHeight = `${computedListHeight}px`;
+                        this.list.style.maxHeight = `${this.list.offsetHeight}px`;
                     }
                    
 
@@ -590,19 +603,24 @@ export default class Autocomplete
     
 
     private addContainerFocusedClassNames = () =>{
-        this.container.classList.add(this.attributeValues.containerFocusedClassName);
-        
-        if(this.attributeValues.containerFocusedAdditionalClassNames){
-            for(const name of this.attributeValues.containerFocusedAdditionalClassNames){
-                this.container.classList.add(name);
+        if(this.container !== undefined){
+            this.container.classList.add(this.attributeValues.containerFocusedClassName);
+            
+            if(this.attributeValues.containerFocusedAdditionalClassNames){
+                for(const name of this.attributeValues.containerFocusedAdditionalClassNames){
+                    this.container.classList.add(name);
+                }
             }
         }
     };
     private removeContainerFocusedClassNames = () =>{
-        this.container.classList.remove(this.attributeValues.containerFocusedClassName);
-        if(this.attributeValues.containerFocusedAdditionalClassNames){
-            for(const name of this.attributeValues.containerFocusedAdditionalClassNames){
-                this.container.classList.remove(name);
+        if(this.container !== undefined)
+        {
+            this.container.classList.remove(this.attributeValues.containerFocusedClassName);
+            if(this.attributeValues.containerFocusedAdditionalClassNames){
+                for(const name of this.attributeValues.containerFocusedAdditionalClassNames){
+                    this.container.classList.remove(name);
+                }
             }
         }
     };
@@ -625,28 +643,39 @@ export default class Autocomplete
     }
 
     private removeListShowAllClassNames =()=>{
-        this.list.classList.remove(this.attributeValues.listShowAllClassName); 
-        if(this.attributeValues.listShowAllAdditionalClassNames){
-            for(const name of this.attributeValues.listShowAllAdditionalClassNames){
-                this.list.classList.remove(name);
+        if(this.list !== undefined)
+        { 
+            this.list.classList.remove(this.attributeValues.listShowAllClassName); 
+            if(this.attributeValues.listShowAllAdditionalClassNames){
+                for(const name of this.attributeValues.listShowAllAdditionalClassNames){
+                    this.list.classList.remove(name);
+                }
             }
         }
     }
 
     private addListShowAllClassNames =()=>{
-        this.list.classList.add(this.attributeValues.listShowAllClassName); 
-        if(this.attributeValues.listShowAllAdditionalClassNames){
-            for(const name of this.attributeValues.listShowAllAdditionalClassNames){
-                this.list.classList.add(name);
+        if(this.list !== undefined)
+        {
+            this.list.classList.add(this.attributeValues.listShowAllClassName); 
+            if(this.attributeValues.listShowAllAdditionalClassNames){
+                for(const name of this.attributeValues.listShowAllAdditionalClassNames){
+                    this.list.classList.add(name);
+                }
             }
         }
     }
 
     clearList = ()=>{
-        this.list.replaceChildren(...[]);
-        this.list.hidden = true;
+
+        if(this.list !== undefined)
+        {
+            this.list.replaceChildren(...[]);
+            this.list.hidden = true;
+            this.list.setAttribute('aria-hidden', 'true');
+        }
+        
         this.input.setAttribute('aria-expanded', 'false');
-        this.list.setAttribute('aria-hidden', 'true');
         this.selectedIndex = -1;
         this.removeInputShowClassNames();
         this.removeListShowAllClassNames();
@@ -706,7 +735,7 @@ export default class Autocomplete
         }
 
         li.id = this.attributeValues.getSuggestionId(index);
-        li.innerText = this.attributeValues.options.show_all_for_postcode_text;
+        li.innerText = this.attributeValues.options.show_all_for_postcode_text ?? Options.show_all_for_postcode_text_default;
       
         li.setAttribute('role', 'option');
         li.setAttribute('aria-posinset', `${index + 1}`);
