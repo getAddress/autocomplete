@@ -309,7 +309,11 @@ export default class Autocomplete
                 }
 
                 const id = suggestion.dataset.id as string;
-                const addressResult = await this.client.get(id);
+                const addressResult = await this.client.get(id,
+                { 
+                    remember : this.attributeValues.options.remember_last_search  }
+                );
+                
                 if(addressResult.isSuccess){
                     let success = addressResult.toSuccess();
                     

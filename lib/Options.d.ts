@@ -36,5 +36,6 @@ export declare class Options {
     debug?: boolean | undefined;
     enable_get?: boolean | undefined;
     set_default_output_field_names?: boolean | undefined;
+    remember_last_search?: boolean | undefined;
     constructor(options?: Partial<Options>);
 }

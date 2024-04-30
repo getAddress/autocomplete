@@ -38,6 +38,7 @@ export class Options
     debug?=false;
     enable_get?=true;
     set_default_output_field_names?=true;
+    remember_last_search? = true;
 
     constructor(options: Partial<Options> = {}) {
         Object.assign(this, options);
