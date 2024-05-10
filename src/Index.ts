@@ -15,7 +15,7 @@ class InstanceCounter
 
 }
 
-export function autocomplete(id:string,api_key:string, options: Partial<Options>)
+function autocomplete(id:string,api_key:string, options: Partial<Options>)
 {
 
     if(!id){
@@ -83,10 +83,12 @@ export function autocomplete(id:string,api_key:string, options: Partial<Options>
     InstanceCounter.add(autocomplete);
 }
 
-export function destroy()
+function destroy()
 {
     for(const instance of InstanceCounter.instances){
         instance.destroy();
     }
     InstanceCounter.instances = [];
 }
+
+export {autocomplete, destroy,Options};
