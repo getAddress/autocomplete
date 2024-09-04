@@ -91,7 +91,7 @@ getAddress.autocomplete(
           highlight_suggestion_start_tag:'<b>',  /* highlighted suggestion text start tag */
           highlight_suggestion_end_tag:'</b>',  /* highlighted suggestion text end tag */
           list_width:undefined,   /* if true, set the list width */
-          suggestion_count:6, /* number of retreived suggestions (max 20) */
+          suggestion_count:6, /* number of retreived suggestions */
           auto_calc_list_height:true,   /* if true, calculates the list's height */
           suggestion_template:undefined, /* the suggestion template (see Autocomplete API)*/
           filter:undefined, /* the suggestion filter (see Autocomplete API)*/
