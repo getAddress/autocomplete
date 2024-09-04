@@ -73,7 +73,6 @@ function autocomplete(id:string,api_key:string, options: Partial<Options>)
     const attributeValues = new AttributeValues(fullOptions,index);
     
     const autocomplete = new Autocomplete(textbox,client,outputFields,attributeValues);
-    autocomplete.build();
     
     if(index === 0){
         const style = new Style(attributeValues);

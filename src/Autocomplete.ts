@@ -3,75 +3,45 @@ import Client, { AutocompleteAddress, AutocompleteOptions, Suggestion } from 'ge
 import { OutputFields } from "./OutputFields";
 import { AddressSelectedEvent, AddressSelectedFailedEvent, SuggestionsEvent, SuggestionsFailedEvent } from "./Events";
 import { Options } from "./Options";
-
+import Input from "./Input";
+import List from "./List";
+import Container from "./Container";
 
 export default class Autocomplete
 {
 
     private filterTimer: ReturnType<typeof setTimeout> | undefined;
     private blurTimer: ReturnType<typeof setTimeout> | undefined;
-    private container:HTMLElement|undefined = undefined;
-    private list: HTMLElement|undefined = undefined;
     private selectedIndex = -1;
     private showAllClicked:boolean = false;
     private documentClick: any | undefined;
+    private readonly input:Input;
+    private readonly list:List;
+    private readonly container:Container;
 
-    constructor(readonly input:HTMLInputElement,readonly client:Client,
+    constructor(inputElement:HTMLInputElement ,readonly client:Client,
         readonly output_fields:OutputFields, readonly attributeValues:AttributeValues)
     {
+        this.input = new Input(inputElement,attributeValues,this.onInputFocus,this.onInputPaste);
+
+        this.list = new List(attributeValues,this.onListMouseEnter,this.onListClick);
         
+        this.container = new Container(attributeValues,this.onContainerKeyDown,this.onContainerKeyUp,this.onContainerFocusOut);
+
+        this.build();
     }
 
     public destroy(){
-        this.destroyContainer();
-        this.destroyInput();
-        this.destroyList();
-    }
-
-    private destroyList()
-    {
-        if(this.list !== undefined){
-            this.list.remove();
-        }
-    }
-
-    private destroyContainer(){
-
-        if(this.container !== undefined){
-            this.container.removeEventListener('keydown',this.onContainerKeyDown);
-            this.container.removeEventListener('keyup',this.onContainerKeyUp);
-            this.container.removeEventListener('focusout',this.onContainerFocusOut);
-
-            const children = Array.from(this.container.childNodes);
-            this.container.replaceWith(...children);
-        }
-    }
-
-    private destroyInput(){
-
-        this.input.classList.remove(this.attributeValues.inputClassName);
-        if(this.attributeValues.inputAdditionalClassNames){
-            for(const name of this.attributeValues.inputAdditionalClassNames){
-                this.input.classList.remove(name);
-            }
-        }
-        this.removeInputShowClassNames();
-
-        this.input.removeAttribute('aria-expanded');
-        this.input.removeAttribute('autocomplete');
-        this.input.removeAttribute('aria-autocomplete');
-        this.input.removeAttribute('role');
-        this.input.removeAttribute('aria-owns');
-
-        this.input.removeEventListener('focus',this.onInputFocus);
-        this.input.removeEventListener('paste',this.onInputPaste);
+        this.container.destroy();
+        this.input.destroy();
+        this.list.destroy();
     }
 
     private onInputFocus =  (event:any) => {
-        this.addContainerFocusedClassNames();
+        this.container.addFocusedClassNames();
         
         if(this.attributeValues.options.select_on_focus){
-            this.input.select();
+            this.input.element.select();
         }
         this.selectedIndex = -1;
     };
@@ -85,98 +55,54 @@ export default class Autocomplete
         this.handleKeyUp(event);
     };
 
-    private onContainerKeyDown = (event:KeyboardEvent) => {
+    private onContainerKeyDown = (event:KeyboardEvent) => 
+    {
         this.debug(event);
         this.keyDownHandler(event);
     };
 
-    private onContainerFocusOut = (event:any) => {
-          
+    private onContainerFocusOut = (event:any) => 
+    {
         this.handleComponentBlur(event, false);
-     }
+    }
 
-    public build()
+    private build()
     {
         this.documentClick = this.handleComponentBlur.bind(this);
 
-        this.input.classList.add(this.attributeValues.inputClassName);
-        if(this.attributeValues.inputAdditionalClassNames){
-            for(const name of this.attributeValues.inputAdditionalClassNames){
-                this.input.classList.add(name);
-            }
-        }
-
-        this.input.setAttribute('aria-expanded', 'false');
-        this.input.setAttribute('autocomplete', 'off');
-        this.input.setAttribute('aria-autocomplete', 'list');
-        this.input.setAttribute('role', 'combobox');
-        this.input.setAttribute('aria-owns', `${this.attributeValues.listId}`);
-        
-
-        this.container = document.createElement('DIV');
-        this.container.id = this.attributeValues.containerId;
-        this.container.className = this.attributeValues.containerClassName;
-        if(this.attributeValues.containerAdditionalClassNames){
-            for(const name of this.attributeValues.containerAdditionalClassNames){
-                this.container.classList.add(name);
-            }
-        }
-        if(this.input?.parentNode != null)
+        if(this.input.element.parentNode != null)
         {
-        this.input.parentNode.insertBefore(this.container,this.input);
-        
-        this.input.addEventListener('focus', this.onInputFocus);
-
-        this.input.addEventListener('paste', this.onInputPaste);
+            this.input.element.parentNode.insertBefore(this.container.element,this.input.element);
         }
-        
-        this.container.addEventListener('focusout', this.onContainerFocusOut);
 
-        this.container.appendChild(this.input);
+        this.container.element.appendChild(this.input.element);
 
-        this.list = document.createElement('UL');
-        this.list.id = this.attributeValues.listId;
-        this.list.hidden = true;
-        this.list.className = this.attributeValues.listClassName;
-        if(this.attributeValues.listAdditionalClassNames){
-            for(const name of this.attributeValues.listAdditionalClassNames){
-                this.list.classList.add(name);
-            }
-        }
-        this.list.setAttribute('role', 'listbox');
-        this.list.setAttribute('aria-hidden', 'true');
+        this.container.element.appendChild(this.list.element);
+    }
 
-        this.list.addEventListener('mouseenter', (event) => {
-            if(this.list !== undefined){
-                const suggestions = this.list.children;
-                this.removeSuggestionFocusedClassName(suggestions);
-            }
-        });
-       
-        this.list.addEventListener('click', (event) => {
-            if (this.list !== undefined && event.target !== this.list) 
+    private onListClick = (event:any) => {
+
+        if (event.target !== this.list.element) 
+        {
+            const suggestions = Array.from(this.list.element.children);
+            if (suggestions.length) 
             {
-                const suggestions = Array.from(this.list.children);
-                if (suggestions.length) 
-                {
-                        var element = event.target
-                        
-                        while(element instanceof HTMLElement && element.tagName !== "LI")
-                        {
-                            element = element.parentElement;
-                        }
-
-                        const suggestionIndex = suggestions.indexOf(element as HTMLElement);
-                        this.handleSuggestionSelected(event, suggestionIndex);
+                    var element = event.target
                     
-                }
-            }
-        });
+                    while(element instanceof HTMLElement && element.tagName !== "LI")
+                    {
+                        element = element.parentElement;
+                    }
 
-        this.container.addEventListener('keydown', this.onContainerKeyDown);
-        this.container.addEventListener('keyup', this.onContainerKeyUp);
-        
-        this.container.appendChild(this.list);
+                    const suggestionIndex = suggestions.indexOf(element as HTMLElement);
+                    this.handleSuggestionSelected(event, suggestionIndex);
+            }
+        }
+    }
+
+    private onListMouseEnter = (event:any) => {
+        const suggestions = this.list.element.children;
+        this.removeSuggestionFocusedClassName(suggestions);
     }
 
     private debug = (data:any)=>{
@@ -218,20 +144,21 @@ export default class Autocomplete
     };
 
     handlePageUpKey = (event: KeyboardEvent) => {
-        if (this.list !== undefined && !this.list.hidden) {
+        if (!this.list.element.hidden) {
             event.preventDefault();
             this.setSuggestionFocus(event, 0);
         }
     }
+
     handlePageDownKey = (event: KeyboardEvent) => {
-        if (this.list !== undefined && !this.list.hidden) {
+        if (!this.list.element.hidden) {
             event.preventDefault();
-            this.setSuggestionFocus(event, this.list.children.length -1);
+            this.setSuggestionFocus(event, this.list.element.children.length -1);
         }
     }
 
     handleHomeKey = (event: KeyboardEvent) => {
-        if (this.list !== undefined  && !this.list.hidden && event.target !== this.input) {
+        if (!this.list.element.hidden && event.target !== this.input.element) {
             event.preventDefault();
             this.setSuggestionFocus(event, 0);
         }
@@ -247,15 +174,14 @@ export default class Autocomplete
 
             if (!force &&
                 activeElem &&
-                this.container !== undefined &&
-                this.container.contains(activeElem)
+                this.container.element.contains(activeElem)
             ) {
                 return;
             }
             
             if(!this.showAllClicked){
                 this.clearList();
-                this.removeContainerFocusedClassNames();
+                this.container.removeFocusedClassNames();
                 
             }
             this.showAllClicked = false;
@@ -265,8 +191,8 @@ export default class Autocomplete
 
 
     handleEndKey = (event: KeyboardEvent) => {
-        if (this.list !== undefined && !this.list.hidden) {
-            const suggestions = this.list.children;
+        if (!this.list.element.hidden) {
+            const suggestions = this.list.element.children;
             if (suggestions.length) {
                 event.preventDefault();
                 this.setSuggestionFocus(event, suggestions.length - 1);
@@ -275,7 +201,7 @@ export default class Autocomplete
     }
 
     handleEnterKey = (event: KeyboardEvent) =>{
-        if (this.list !== undefined && !this.list.hidden) {
+        if (!this.list.element.hidden) {
             event.preventDefault();
             if (this.selectedIndex > -1) {
                 this.handleSuggestionSelected(event, this.selectedIndex);
@@ -290,14 +216,14 @@ export default class Autocomplete
 
         if(this.selectedIndex > -1 && this.list !== undefined )
         {
-            const suggestions = this.list.children;
+            const suggestions = this.list.element.children;
             const suggestion = suggestions[this.selectedIndex] as HTMLElement;
             
             if(suggestion.innerText === this.attributeValues.options.show_all_for_postcode_text)
             {
                 this.showAllClicked = true;
                 this.populateList(true);
-                this.input.focus();
+                this.input.element.focus();
             }
             else if(!this.attributeValues.options.enable_get){
                 this.clearList();
@@ -311,28 +237,26 @@ export default class Autocomplete
                 const id = suggestion.dataset.id as string;
                 const addressResult = await this.client.get(id,
                 { 
-                    remember : this.attributeValues.options.remember_last_search  }
-                );
+                    remember : this.attributeValues.options.remember_last_search  
+                });
                 
                 if(addressResult.isSuccess){
                     let success = addressResult.toSuccess();
                     
                     this.bind(success.address);
-                    AddressSelectedEvent.dispatch(this.input,id,success.address);
+                    AddressSelectedEvent.dispatch(this.input.element,id,success.address);
                     
                     if(this.attributeValues.options.input_focus_on_select){
-                        this.input.focus();
-                        this.input.setSelectionRange(this.input.value.length,this.input.value.length+1);
+                        this.input.element.focus();
+                        this.input.setSelectionRange();
                     }
                 }
                 else{
                     const failed = addressResult.toFailed();
-                    AddressSelectedFailedEvent.dispatch(this.input,id,failed.status,failed.message);
+                    AddressSelectedFailedEvent.dispatch(this.input.element,id,failed.status,failed.message);
                 }
-            }
-            
+            } 
         }
-        
     };
 
     private bind = (address:AutocompleteAddress)=>
@@ -397,15 +321,15 @@ export default class Autocomplete
             return element;
     }
 
-    handleKeyDownDefault = (event: KeyboardEvent)=>{
-        
+    handleKeyDownDefault = (event: KeyboardEvent)=>
+    {
         let isPrintableKey = event.key.length === 1 || event.key === 'Unidentified';
         if(isPrintableKey){
             clearTimeout(this.filterTimer);
             
             this.filterTimer = setTimeout(() => 
             {
-                if(this.attributeValues.options.minimum_characters && this.input.value.length >= this.attributeValues.options.minimum_characters){
+                if(this.attributeValues.options.minimum_characters && this.input.hasMinimumCharacters()){
                     this.populateList();
                 }
                 else{
@@ -413,42 +337,43 @@ export default class Autocomplete
                 }
             },this.attributeValues.options.delay);
         }
-        else if(this.attributeValues.options.minimum_characters && this.list !== undefined && !this.list.hidden && this.input.value.length < this.attributeValues.options.minimum_characters)
+        else if(this.attributeValues.options.minimum_characters && !this.list.element.hidden && !this.input.hasMinimumCharacters())
         {
             this.clearList(); 
         }
     };
 
-    handleKeyUp = (event: KeyboardEvent)=>{
-        
+    handleKeyUp = (event: KeyboardEvent)=>
+    {
         if(event.code === 'Backspace' || event.code === 'Delete')
         {
-            if(event){
-            const target =(event as Event).target
-            if (target == this.input)
+            if(event)
             {
-                if(this.attributeValues.options.minimum_characters && this.input.value.length < this.attributeValues.options.minimum_characters)
+                const target =(event as Event).target
+                if (target == this.input.element)
                 {
-                    this.clearList(); 
+                    if(this.attributeValues.options.minimum_characters && !this.input.hasMinimumCharacters())
+                    {
+                        this.clearList(); 
+                    }
+                    else 
+                    {
+                        this.populateList();
+                    }
                 }
-                else 
+                else if(this.container.element.contains(target as HTMLElement))
                 {
-                    this.populateList();
+                    this.input.element.focus();
+                    this.input.setSelectionRange();
                 }
             }
-            else if(this.container !== undefined && this.container.contains(target as HTMLElement)){
-                this.input.focus();
-                this.input.setSelectionRange(this.input.value.length,this.input.value.length+1);
-            }
         }
-        }
-        
     };
 
 
     handleUpKey(event: KeyboardEvent) {
         event.preventDefault();
-        if (this.list !== undefined && !this.list.hidden) {
+        if (!this.list.element.hidden) {
             this.setSuggestionFocus(event, this.selectedIndex - 1);
         }
     }
@@ -456,7 +381,7 @@ export default class Autocomplete
     handleDownKey = (event: KeyboardEvent) => {
         event.preventDefault();
 
-        if (this.list !== undefined && !this.list.hidden) 
+        if (!this.list.element.hidden) 
         {
             if (this.selectedIndex < 0) {
                 this.setSuggestionFocus(event, 0);
@@ -467,38 +392,35 @@ export default class Autocomplete
         }
     }
 
-    setSuggestionFocus = (event:Event, index:number) => {
-       
-        if(this.list !== undefined)
-        {
-            const suggestions = this.list.children;
-        
-            this.removeSuggestionFocusedClassName(suggestions);
+    setSuggestionFocus = (event:Event, index:number) => 
+    {
+        const suggestions = this.list.element.children;
+    
+        this.removeSuggestionFocusedClassName(suggestions);
 
-            if (index < 0 || !suggestions.length) {
-                this.selectedIndex = -1;
-                if (event && (event as Event).target !== this.input) {
-                    this.input.focus();
-                }
-                return;
+        if (index < 0 || !suggestions.length) {
+            this.selectedIndex = -1;
+            if (event && (event as Event).target !== this.input.element) {
+                this.input.element.focus();
             }
-
-            if (index >= suggestions.length) {
-                this.selectedIndex = suggestions.length - 1;
-                this.setSuggestionFocus(event, this.selectedIndex);
-                return;
-            }
-
-            const focusedSuggestion = suggestions[index] as HTMLElement;
-            if (focusedSuggestion) {
-                this.selectedIndex = index;
-                this.addSuggestionFocusedClassName(focusedSuggestion);
-                focusedSuggestion.focus();
-                return;
-            }
+            return;
         }
-        this.selectedIndex = -1;
 
+        if (index >= suggestions.length) {
+            this.selectedIndex = suggestions.length - 1;
+            this.setSuggestionFocus(event, this.selectedIndex);
+            return;
+        }
+
+        const focusedSuggestion = suggestions[index] as HTMLElement;
+        if (focusedSuggestion) {
+            this.selectedIndex = index;
+            this.addSuggestionFocusedClassName(focusedSuggestion);
+            focusedSuggestion.focus();
+            return;
+        }
+        
+        this.selectedIndex = -1;
     }
 
     addSuggestionFocusedClassName = (suggestion:HTMLElement)=> {
@@ -525,16 +447,15 @@ export default class Autocomplete
                 autocompleteOptions.filter = this.attributeValues.options.filter;
             }
             
-            const query = this.input.value?.trim();
+            const query = this.input.element.value?.trim();
             const result = await this.client.autocomplete(query, autocompleteOptions);
-            if(result.isSuccess && this.list !== undefined ){
+            if(result.isSuccess){
 
-                if(this.attributeValues.options.auto_calc_list_height && this.list !== undefined){
-                    this.list.style.removeProperty('max-height');
+                if(this.attributeValues.options.auto_calc_list_height){
+                    this.list.element.style.removeProperty('max-height');
                 }
 
-                //const computedListHeight = this.list.offsetHeight;
-                const listChildCount = this.list.children.length;
+                const listChildCount = this.list.element.children.length;
 
                 const success = result.toSuccess();
                 const newItems:Node[] = [];
@@ -554,135 +475,64 @@ export default class Autocomplete
                         && success.suggestions.length 
                         && (success.suggestions.length) === autocompleteOptions.top)
                     {
-                        const li = this.getShowAllListItem(this.list.children.length,totalLength);
+                        const li = this.getShowAllListItem(this.list.element.children.length,totalLength);
                         newItems.push(li);
                     }
 
-                    this.list.replaceChildren(...newItems);
+                    this.list.element.replaceChildren(...newItems);
                     
-                    const toFocus = this.list.children[0] as HTMLElement;
+                    const toFocus = this.list.element.children[0] as HTMLElement;
                     if (toFocus) {
                         this.selectedIndex = 0;
                         toFocus.classList.add(this.attributeValues.suggestionFocusedClassName);
                     }
 
-                    this.addInputShowClassNames();
+                    this.input.addInputShowClassNames();
                         
-                    this.list.hidden = false;
-                    this.input.setAttribute('aria-expanded', 'true');
-                    this.list.setAttribute('aria-hidden', 'false');
+                    this.list.element.hidden = false;
+                    this.input.element.setAttribute('aria-expanded', 'true');
+                    this.list.element.setAttribute('aria-hidden', 'false');
                     
                     if(show_all)
                     {
-                        this.addListShowAllClassNames();
+                        this.list.addShowAllClassNames();
                     }
-
 
                     if(show_all && 
                         this.attributeValues.options.auto_calc_list_height 
-                        && this.list.offsetHeight > 0
-                        && listChildCount<this.list.children.length)
+                        && this.list.element.offsetHeight > 0
+                        && listChildCount<this.list.element.children.length)
                     {
-                        this.list.style.maxHeight = `${this.list.offsetHeight}px`;
+                        this.list.element.style.maxHeight = `${this.list.element.offsetHeight}px`;
                     }
-                   
 
                     document.addEventListener('click', this.documentClick);
-                    
-
                 }
                 else
                 {
                     this.clearList(); 
                 }
-                SuggestionsEvent.dispatch(this.input,query, success.suggestions);
+
+                SuggestionsEvent.dispatch(this.input.element,query, success.suggestions);
             }
             else
             {
                 const failed = result.toFailed();
-                SuggestionsFailedEvent.dispatch(this.input,query,failed.status,failed.message);
+                SuggestionsFailedEvent.dispatch(this.input.element,query,failed.status,failed.message);
             }
     };
 
     
 
-    private addContainerFocusedClassNames = () =>{
-        if(this.container !== undefined){
-            this.container.classList.add(this.attributeValues.containerFocusedClassName);
-            
-            if(this.attributeValues.containerFocusedAdditionalClassNames){
-                for(const name of this.attributeValues.containerFocusedAdditionalClassNames){
-                    this.container.classList.add(name);
-                }
-            }
-        }
-    };
-    private removeContainerFocusedClassNames = () =>{
-        if(this.container !== undefined)
-        {
-            this.container.classList.remove(this.attributeValues.containerFocusedClassName);
-            if(this.attributeValues.containerFocusedAdditionalClassNames){
-                for(const name of this.attributeValues.containerFocusedAdditionalClassNames){
-                    this.container.classList.remove(name);
-                }
-            }
-        }
-    };
-
-    private addInputShowClassNames =()=>{
-        this.input.classList.add(this.attributeValues.inputShowClassName); 
-        if(this.attributeValues.inputShowAdditionalClassNames){
-            for(const name of this.attributeValues.inputShowAdditionalClassNames){
-                this.input.classList.add(name);
-            }
-        }
-    }
-    private removeInputShowClassNames =()=>{
-        this.input.classList.remove(this.attributeValues.inputShowClassName); 
-        if(this.attributeValues.inputShowAdditionalClassNames){
-            for(const name of this.attributeValues.inputShowAdditionalClassNames){
-                this.input.classList.remove(name);
-            }
-        }
-    }
-
-    private removeListShowAllClassNames =()=>{
-        if(this.list !== undefined)
-        { 
-            this.list.classList.remove(this.attributeValues.listShowAllClassName); 
-            if(this.attributeValues.listShowAllAdditionalClassNames){
-                for(const name of this.attributeValues.listShowAllAdditionalClassNames){
-                    this.list.classList.remove(name);
-                }
-            }
-        }
-    }
-
-    private addListShowAllClassNames =()=>{
-        if(this.list !== undefined)
-        {
-            this.list.classList.add(this.attributeValues.listShowAllClassName); 
-            if(this.attributeValues.listShowAllAdditionalClassNames){
-                for(const name of this.attributeValues.listShowAllAdditionalClassNames){
-                    this.list.classList.add(name);
-                }
-            }
-        }
-    }
-
     clearList = ()=>{
 
-        if(this.list !== undefined)
-        {
-            this.list.replaceChildren(...[]);
-            this.list.hidden = true;
-            this.list.setAttribute('aria-hidden', 'true');
-        }
-        
-        this.input.setAttribute('aria-expanded', 'false');
+        this.list.clear();
+
+        this.input.element.setAttribute('aria-expanded', 'false');
         this.selectedIndex = -1;
-        this.removeInputShowClassNames();
-        this.removeListShowAllClassNames();
+
+        this.input.removeInputShowClassNames();
+
         document.removeEventListener('click', this.documentClick);
     };
 
@@ -701,12 +551,13 @@ export default class Autocomplete
         let address = suggestion.address;
         if(this.attributeValues.options.highlight_suggestion)
         {
-            let regexvalue = this.input.value.trim().replace(/ /g,',* +')
+            let regexvalue = this.input.element.value.trim().replace(/ /g,',* +')
             const regexp = new RegExp(`\\b(${regexvalue})`,"gi");
             address = address.replace(regexp, `${this.attributeValues.options.highlight_suggestion_start_tag}$1${this.attributeValues.options.highlight_suggestion_end_tag}`);
             li.innerHTML = address;
         }
-        else{
+        else
+        {
             li.innerText = address;
         }
 
