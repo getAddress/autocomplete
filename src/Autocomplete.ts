@@ -347,10 +347,13 @@ export default class Autocomplete
     {
         if(event.code === 'Backspace' || event.code === 'Delete')
         {
-            if(event)
+
+            const target =(event as Event).target
+            if (target == this.input.element)
             {
-                const target =(event as Event).target
-                if (target == this.input.element)
+                clearTimeout(this.filterTimer);
+
+                this.filterTimer = setTimeout(() => 
                 {
                     if(this.attributeValues.options.minimum_characters && !this.input.hasMinimumCharacters())
                     {
@@ -360,13 +363,15 @@ export default class Autocomplete
                     {
                         this.populateList();
                     }
-                }
-                else if(this.container.element.contains(target as HTMLElement))
-                {
-                    this.input.element.focus();
-                    this.input.setSelectionRange();
-                }
+                },this.attributeValues.options.delay);
+
             }
+            else if(this.container.element.contains(target as HTMLElement))
+            {
+                this.input.element.focus();
+                this.input.setSelectionRange();
+            }
+            
         }
     };
 

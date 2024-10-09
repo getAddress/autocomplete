@@ -95,7 +95,7 @@ export default class Style{
         } 
         else 
         {
-        head.appendChild(style)
+            head.appendChild(style)
         }
     }
 
