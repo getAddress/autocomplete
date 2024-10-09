@@ -8,34 +8,40 @@ npm install getaddress-autocomplete
 ```
 ### Or CDN
 ```
-<script src="https://cdn.getaddress.io/scripts/getaddress-autocomplete-1.3.7.min.js"></script>
+<script src="https://cdn.getaddress.io/scripts/getaddress-autocomplete-2.0.0.min.js"></script>
 ```
 
 ## Usage
 ```
-  <input type="text" id="textbox_id" > 
-  <br/>
+  <label>Address Line 1</label>
+  <div><input id="line1" type="text"></div>
 
-  <label>Formatted_address_0</label>
-  <div><input id="formatted_address_0" type="text"></div>
+  <label>Address Line 2</label>
+  <div><input id="line2" type="text"></div>
 
-   <label>Formatted_address_1</label>
-  <div><input id="formatted_address_1" type="text"></div>
+  <label>Address Line 3</label>
+  <div><input id="line3" type="text"></div>
 
-   <label>Formatted_address_2</label>
-  <div><input id="formatted_address_2" type="text"></div>
+  <label>Address Line 4</label>
+  <div><input id="line4" type="text"></div>
 
-   <label>Formatted_address_3</label>
-  <div><input id="formatted_address_3" type="text"></div>
-
-  <label>Formatted_address_4</label>
-  <div><input id="formatted_address_4" type="text"></div>
+  <label>Address Line 5</label>
+  <div><input id="line5" type="text"></div>
 
   <label>Postcode</label>
   <div><input id="postcode" type="text"></div>
   
   <script>
-    getAddress.autocomplete("textbox_id","API Key");
+    const autocomplete = getAddress.autocomplete("line1","API Key");
+    
+    autocomplete.addEventListener("getaddress-autocomplete-address-selected", function(e){
+      document.getElementById('line1').value = e.address.formatted_address[0];
+      document.getElementById('line2').value = e.address.formatted_address[1];
+      document.getElementById('line3').value = e.address.formatted_address[2];
+      document.getElementById('line4').value = e.address.formatted_address[3];
+      document.getElementById('line5').value = e.address.formatted_address[4];
+      document.getElementById('postcode').value = e.address.postcode;
+    })
   </script>
 ```
 ## Options
@@ -45,31 +51,6 @@ getAddress.autocomplete(
         'textbox_id',
         'API_KEY',
         /*options*/{
-          output_fields:{
-            formatted_address_0:'formatted_address_0',  /* The id of the element bound to 'formatted_address[0]' */
-            formatted_address_1:'formatted_address_1',  /* The id of the element bound to 'formatted_address[1]' */
-            formatted_address_2:'formatted_address_2',  /* The id of the element bound to 'formatted_address[2]' */
-            formatted_address_3:'formatted_address_3',  /* The id of the element bound to 'formatted_address[3]' */
-            formatted_address_4:'formatted_address_4',  /* The id of the element bound to 'formatted_address[4]' */
-            line_1:'line_1',  /* The id of the element bound to 'line_1' */
-            line_2:'line_2',  /* The id of the element bound to 'line_2' */
-            line_3:'line_3',  /* The id of the element bound to 'line_3' */
-            line_4:'line_4',  /* The id of the element bound to 'line_4' */
-            latitude:'latitude',  /* The id of the element bound to 'latitude' */
-            longitude:'longitude',  /* The id of the element bound to 'longitude' */
-            building_number:'building_number',  /* The id of the element bound to 'building_number' */
-            building_name:'building_name',  /* The id of the element bound to 'building_name' */
-            sub_building_number:'sub_building_number',  /* The id of the element bound to 'sub_building_number' */
-            sub_building_name:'sub_building_name',  /* The id of the element bound to 'sub_building_name' */
-            thoroughfare:'thoroughfare',  /* The id of the element bound to 'thoroughfare' */
-            town_or_city:'town_or_city',/* The id of the element bound to 'town_or_city' */
-            county:'county',  /* The id of the element bound to 'county' */
-            country:'country',  /* The id of the element bound to 'country' */
-            district:'district',  /* The id of the element bound to 'district' */
-            locality:'locality',  /* The id of the element bound to 'locality' */
-            postcode:'postcode',  /* The id of the element bound to 'postcode' */
-            residential:'residential'  /* The id of the element bound to 'residential' */
-          },
           id_prefix:'getAddress-autocomplete' ,  /* The id of the textbox and list container */
           css_prefix?:'getAddress_autocomplete'",  /* The class name prefix */
           delay:200, /* millisecond delay between keypress and API call */
@@ -95,11 +76,13 @@ getAddress.autocomplete(
           auto_calc_list_height:true,   /* if true, calculates the list's height */
           suggestion_template:undefined, /* the suggestion template (see Autocomplete API)*/
           filter:undefined, /* the suggestion filter (see Autocomplete API)*/
-          bind_output_fields:true, /* if true, bind the output_fields to the address*/
           input_focus_on_select:true,  /* if true, sets the focus to the textbox after selecting an address*/
           debug:false, /* if true, logs behavior */
-          enable_get:true /* if true, retreives address on select */,
-          set_default_output_field_names:true /* if true, defaults output field names to JSON field names*/
+          enable_get:true, /* if true, retreives address on select */,
+          full_screen_on_mobile:true, /* if true, opens full screen on mobile devices*/;
+          max_mobile_screen_width:500, /* max mobile screen width*/;
+          full_screen_options:undefined /* full screen display options*/
+
         }
     );
 ```
