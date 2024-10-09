@@ -1,9 +1,7 @@
 import AttributeValues from "./AttributeValues";
 import Client, { Suggestion } from 'getaddress-api';
-import { OutputFields } from "./OutputFields";
 export default class Autocomplete {
     readonly client: Client;
-    readonly output_fields: OutputFields;
     readonly attributeValues: AttributeValues;
     private filterTimer;
     private blurTimer;
@@ -13,7 +11,7 @@ export default class Autocomplete {
     private readonly input;
     private readonly list;
     private readonly container;
-    constructor(inputElement: HTMLInputElement, client: Client, output_fields: OutputFields, attributeValues: AttributeValues);
+    constructor(inputElement: HTMLInputElement, client: Client, attributeValues: AttributeValues);
     destroy(): void;
     private onInputFocus;
     private onInputPaste;
@@ -32,8 +30,6 @@ export default class Autocomplete {
     handleEndKey: (event: KeyboardEvent) => void;
     handleEnterKey: (event: KeyboardEvent) => void;
     handleSuggestionSelected: (event: Event, indexNumber: number) => Promise<void>;
-    private bind;
-    private setOutputfield;
     handleKeyDownDefault: (event: KeyboardEvent) => void;
     handleKeyUp: (event: KeyboardEvent) => void;
     handleUpKey(event: KeyboardEvent): void;

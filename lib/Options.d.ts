@@ -1,11 +1,10 @@
 import { AutocompleteFilter } from 'getaddress-api';
-import { OutputFields } from "./OutputFields";
+import { Options as FSoptions } from "getaddress-autocomplete-modal";
 export declare class Options {
     static show_all_for_postcode_defaut: boolean;
     static show_all_for_postcode_text_default: string;
     id_prefix?: string;
     css_prefix?: string;
-    output_fields?: Partial<OutputFields>;
     delay?: number;
     minimum_characters?: number;
     clear_list_on_select?: boolean;
@@ -37,5 +36,8 @@ export declare class Options {
     enable_get?: boolean | undefined;
     set_default_output_field_names?: boolean | undefined;
     remember_last_search?: boolean | undefined;
+    full_screen_on_mobile: boolean;
+    max_mobile_screen_width: number;
+    full_screen_options?: Partial<FSoptions>;
     constructor(options?: Partial<Options>);
 }
