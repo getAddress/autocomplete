@@ -81,8 +81,6 @@ function autocomplete(id:string,api_key:string, options: Partial<Options>)
         }
     }
 
-
-
     const autocomplete = new Autocomplete(textbox,client,attributeValues);
     
     if(index === 0){
