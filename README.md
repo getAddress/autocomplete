@@ -52,7 +52,7 @@ getAddress.autocomplete(
         'API_KEY',
         /*options*/{
           id_prefix:'getAddress-autocomplete' ,  /* The id of the textbox and list container */
-          css_prefix?:'getAddress_autocomplete'",  /* The class name prefix */
+          css_prefix:'getAddress_autocomplete',  /* The class name prefix */
           delay:200, /* millisecond delay between keypress and API call */
           minimum_characters:2,  /* minimum characters to initiate an API call */
           clear_list_on_select:true, /* if true, clears list on suggestion selected */
