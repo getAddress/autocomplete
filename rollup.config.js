@@ -16,6 +16,15 @@ export default [
     },
     {
         input: "lib/Index.js",
+        output: {
+            file:"dist/getaddress-autocomplete.mjs",
+            format:"es",
+            sourcemap:  "inline"
+        }
+        ,plugins:[nodeResolve()]
+    },
+    {
+        input: "lib/Index.js",
         output: 
             {
                 file:"dist/getaddress-autocomplete-" + pkg.version + ".js",
