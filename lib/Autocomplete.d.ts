@@ -1,5 +1,5 @@
 import AttributeValues from "./AttributeValues";
-import Client, { Suggestion } from 'getaddress-api';
+import { Client, Suggestion } from '../node_modules/getaddress-api/lib/Types.js';
 export default class Autocomplete {
     readonly client: Client;
     readonly attributeValues: AttributeValues;

@@ -1,5 +1,5 @@
 import AttributeValues from "./AttributeValues";
-import Client, { AutocompleteAddress, AutocompleteOptions, Suggestion } from 'getaddress-api';
+import  {Client, AutocompleteAddress, AutocompleteOptions, Suggestion } from '../node_modules/getaddress-api/lib/Types.js';
 import { AddressSelectedEvent, AddressSelectedFailedEvent, SuggestionsEvent, SuggestionsFailedEvent } from "./Events";
 import { Options } from "./Options";
 import Input from "./Input";
