@@ -41,6 +41,7 @@ export class Options
     full_screen_on_mobile=true;
     max_mobile_screen_width = 500;
     full_screen_options?:Partial<FSoptions>=undefined;
+    show_postcode?= false;
 
     constructor(options: Partial<Options> = {}) {
         Object.assign(this, options);

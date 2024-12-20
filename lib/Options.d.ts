@@ -39,5 +39,6 @@ export declare class Options {
     full_screen_on_mobile: boolean;
     max_mobile_screen_width: number;
     full_screen_options?: Partial<FSoptions>;
+    show_postcode?: boolean | undefined;
     constructor(options?: Partial<Options>);
 }

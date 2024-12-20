@@ -1,5 +1,5 @@
 import AttributeValues from "./AttributeValues";
-import  {Client, AutocompleteAddress, AutocompleteOptions, Suggestion } from '../node_modules/getaddress-api/lib/Types.js';
+import  {Client, AutocompleteOptions, Suggestion } from '../node_modules/getaddress-api/lib/Index.js';
 import { AddressSelectedEvent, AddressSelectedFailedEvent, SuggestionsEvent, SuggestionsFailedEvent } from "./Events";
 import { Options } from "./Options";
 import Input from "./Input";
@@ -384,7 +384,8 @@ export default class Autocomplete
             const autocompleteOptions:Partial<AutocompleteOptions> = {
                     all:show_all,
                     top:this.attributeValues.options.suggestion_count,
-                    template:this.attributeValues.options.suggestion_template
+                    template:this.attributeValues.options.suggestion_template,
+                    show_postcode:this.attributeValues.options.show_postcode
             };
 
             if(this.attributeValues.options.filter){
